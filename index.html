@@ -448,7 +448,25 @@
           <button class="chip-btn" data-cbrand="o.b.">o.b.</button>
         </div>
       </div>
-      <p class="compare-hint">Cada fila = 1 producto · Cada columna = 1 retailer · Verde = precio más bajo · — = no disponible en ese retailer · Solo productos con precio en 2+ retailers</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-2);">
+        <p class="compare-hint">Cada fila = 1 producto · Cada columna = 1 retailer · Verde = precio más bajo · — = no disponible en ese retailer · Solo productos con precio en 2+ retailers</p>
+        <div class="export-wrap" id="exportWrapCompare">
+          <button class="export-btn" onclick="toggleExportMenuCompare()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exportar Excel
+          </button>
+          <div class="export-dropdown" id="exportDropdownCompare">
+            <div class="export-option" onclick="exportCompareExcel('clean')">
+              <span class="export-option-title">Limpio</span>
+              <span class="export-option-desc">Tabla cruzada simple, lista para analizar</span>
+            </div>
+            <div class="export-option" onclick="exportCompareExcel('report')">
+              <span class="export-option-title">Informe</span>
+              <span class="export-option-desc">Con colores, mejor precio resaltado y ahorro</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="cross-table-wrap">
       <div class="cross-scroll">
@@ -1080,6 +1098,141 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   upd();
   t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upd();});
 })();
+
+// ── EXPORT MENU COMPARE ───────────────────────────────────────────────────────
+function toggleExportMenuCompare(){
+  const dd=document.getElementById('exportDropdownCompare');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  const wrap=document.getElementById('exportWrapCompare');
+  if(wrap && !wrap.contains(e.target)) {
+    const dd=document.getElementById('exportDropdownCompare');
+    if(dd) dd.classList.remove('open');
+  }
+});
+
+// ── COMPARE EXCEL EXPORT ──────────────────────────────────────────────────────
+function exportCompareExcel(mode){
+  document.getElementById('exportDropdownCompare').classList.remove('open');
+
+  const groups = buildGroups(cState.brand, cState.search);
+  if(!groups.length){ alert('No hay datos para exportar con los filtros actuales.'); return; }
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const filename = `Kenvue_Comparativa_${now.toISOString().slice(0,10)}.xlsx`;
+
+  // Determine active retailers in current filtered data
+  const activeRetailers = ALL_RETAILERS.filter(r => groups.some(g => g.byRetailer[r]));
+
+  const wb = XLSX.utils.book_new();
+
+  // ── HOJA 1: TABLA CRUZADA ─────────────────────────────────────────────────
+  const headers = ['Producto', 'Marca', 'Categoría', ...activeRetailers, 'Precio mín.', 'Retailer más barato', 'Precio máx.', 'Ahorro (€)', 'Ahorro (%)'];
+
+  const rows = groups.map(g => {
+    const allPrices = Object.values(g.byRetailer).map(p => p.pvp);
+    const minP = Math.min(...allPrices);
+    const maxP = Math.max(...allPrices);
+    const bestRetailer = Object.entries(g.byRetailer).find(([,p]) => p.pvp === minP);
+    const saving = parseFloat((maxP - minP).toFixed(2));
+    const savingPct = Math.round((saving / maxP) * 100);
+
+    const retailerCells = activeRetailers.map(r => {
+      const p = g.byRetailer[r];
+      return p ? p.pvp : '—';
+    });
+
+    return [g.label, g.brand, g.category, ...retailerCells,
+            minP, bestRetailer ? bestRetailer[0] : '—', maxP, saving, savingPct];
+  });
+
+  const wsData = [headers, ...rows];
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  const cols = [{wch:36},{wch:22},{wch:18}];
+  activeRetailers.forEach(() => cols.push({wch:13}));
+  cols.push({wch:13},{wch:20},{wch:13},{wch:12},{wch:12});
+  ws['!cols'] = cols;
+
+  if(mode === 'report'){
+    const brandFill = {
+      "Johnson's":            'FFdceef8',
+      'Le Petit Marseillais': 'FFd8f0e0',
+      'OGX':                  'FFfae8d8',
+      'Carefree':             'FFf0e0f8',
+      'o.b.':                 'FFfde0dc',
+    };
+
+    // Header row style
+    headers.forEach((_, ci) => {
+      const cellRef = XLSX.utils.encode_cell({r:0, c:ci});
+      if(!ws[cellRef]) return;
+      ws[cellRef].s = {
+        font: {bold:true, color:{rgb:'FFFFFFFF'}, sz:11},
+        fill: {fgColor:{rgb:'FF1a4fa0'}},
+        alignment: {horizontal:'center', vertical:'center', wrapText:true},
+        border: {bottom:{style:'medium', color:{rgb:'FFffffff'}}}
+      };
+    });
+
+    // Data rows
+    rows.forEach((row, ri) => {
+      const brand = row[1];
+      const rowFill = brandFill[brand] || 'FFfafaf8';
+      const allPrices = activeRetailers.map((_,i) => row[3+i]).filter(v => v !== '—');
+      const minP = allPrices.length ? Math.min(...allPrices) : null;
+
+      row.forEach((val, ci) => {
+        const cellRef = XLSX.utils.encode_cell({r:ri+1, c:ci});
+        if(!ws[cellRef]) return;
+
+        // Detect if this is a retailer price column
+        const isRetailerCol = ci >= 3 && ci < 3 + activeRetailers.length;
+        const isBestPrice = isRetailerCol && val !== '—' && val === minP;
+        const isSavingPct = ci === headers.length - 1;
+
+        ws[cellRef].s = {
+          font: {
+            bold: isBestPrice || isSavingPct,
+            color: {rgb: isBestPrice ? 'FF3a7a30' : isSavingPct && row[isSavingPct] > 20 ? 'FF3a7a30' : 'FF1e1812'},
+            sz: 10
+          },
+          fill: {fgColor:{rgb: isBestPrice ? 'FFd8f0d0' : rowFill}},
+          alignment: {horizontal: ci > 2 ? 'center' : 'left', vertical:'center'},
+          border: {
+            bottom:{style:'thin', color:{rgb:'FFe4ddd6'}},
+            right: {style:'thin', color:{rgb:'FFe4ddd6'}}
+          },
+          numFmt: (isRetailerCol && val !== '—') ? '#,##0.00" €"' : ''
+        };
+      });
+    });
+
+    ws['!freeze'] = {xSplit:3, ySplit:1};
+
+    // ── HOJA 2: INFO ──────────────────────────────────────────────────────
+    const ws2 = XLSX.utils.aoa_to_sheet([
+      ['Kenvue Price Tracker — Comparativa por producto'],
+      [''],
+      ['Generado el:', dateStr],
+      ['Productos comparados:', groups.length],
+      ['Retailers incluidos:', activeRetailers.join(', ')],
+      ['Fuente:', 'https://arigabri2008.github.io/Kenvue-Tracker/'],
+      [''],
+      ['Verde = precio más bajo para ese producto'],
+      ['— = producto no disponible en ese retailer'],
+    ]);
+    ws2['!cols'] = [{wch:30},{wch:70}];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Info');
+  }
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Comparativa');
+  XLSX.writeFile(wb, filename);
+}
+
 
 // ── EXPORT MENU ───────────────────────────────────────────────────────────────
 function toggleExportMenu(){
