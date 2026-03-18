@@ -1,0 +1,56 @@
+name: Kenvue Price Tracker - Actualizacion semanal
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Instalar dependencias Python
+        run: |
+          pip install --upgrade pip
+          pip install playwright httpx beautifulsoup4 lxml
+
+      - name: Instalar Chromium
+        run: playwright install chromium --with-deps
+
+      - name: Ejecutar scraper
+        run: python scraper.py
+
+      - name: Confirmar si prices.json cambio
+        id: check_changes
+        run: |
+          git diff --quiet prices.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit y push de prices.json
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add prices.json
+          git commit -m "actualizacion de precios $(date -u +'%Y-%m-%d')"
+          git push
+
+      - name: Subir prices.json como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: prices-${{ github.run_id }}
+          path: prices.json
+          retention-days: 30
