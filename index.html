@@ -226,6 +226,18 @@
     .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);}
     .footer-note{font-size:var(--text-xs);color:var(--color-text-faint);}
 
+    /* ── EXPORT BUTTON ── */
+    .export-wrap{position:relative;display:inline-block;}
+    .export-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text-muted);font-size:var(--text-xs);font-weight:600;cursor:pointer;white-space:nowrap;}
+    .export-btn:hover{border-color:var(--color-success);color:var(--color-success);background:var(--color-success-hl);}
+    .export-dropdown{display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:100;min-width:200px;overflow:hidden;}
+    .export-dropdown.open{display:block;}
+    .export-option{display:flex;flex-direction:column;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--color-divider);}
+    .export-option:last-child{border-bottom:none;}
+    .export-option:hover{background:var(--color-surface-offset);}
+    .export-option-title{font-size:var(--text-xs);font-weight:600;color:var(--color-text);}
+    .export-option-desc{font-size:.7rem;color:var(--color-text-muted);margin-top:2px;}
+
     /* ── LIVE DATA BANNER ── */
     .live-banner{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-6);background:var(--color-success-hl);border-bottom:1px solid var(--color-success);font-size:var(--text-xs);color:var(--color-success);}
     .live-banner svg{flex-shrink:0;}
@@ -356,6 +368,22 @@
       </div>
       <div class="controls-bottom">
         <div class="result-count">Mostrando <span id="visibleCount">—</span> de <span id="totalCount">—</span> productos</div>
+        <div class="export-wrap" id="exportWrap">
+            <button class="export-btn" onclick="toggleExportMenu()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Exportar Excel
+            </button>
+            <div class="export-dropdown" id="exportDropdown">
+              <div class="export-option" onclick="exportExcel('clean')">
+                <span class="export-option-title">Limpio</span>
+                <span class="export-option-desc">Tabla simple, lista para filtrar y pivotar</span>
+              </div>
+              <div class="export-option" onclick="exportExcel('report')">
+                <span class="export-option-title">Informe</span>
+                <span class="export-option-desc">Con colores, cabeceras y hoja resumen</span>
+              </div>
+            </div>
+          </div>
         <div style="display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap;">
           <div style="display:flex;gap:var(--space-2);align-items:center;">
             <span class="filter-label">Oferta</span>
@@ -1053,8 +1081,184 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upd();});
 })();
 
+// ── EXPORT MENU ───────────────────────────────────────────────────────────────
+function toggleExportMenu(){
+  const dd=document.getElementById('exportDropdown');
+  dd.classList.toggle('open');
+}
+document.addEventListener('click', e=>{
+  const wrap=document.getElementById('exportWrap');
+  if(wrap && !wrap.contains(e.target)) document.getElementById('exportDropdown').classList.remove('open');
+});
+
+// ── EXCEL EXPORT ──────────────────────────────────────────────────────────────
+function exportExcel(mode){
+  document.getElementById('exportDropdown').classList.remove('open');
+  const list = getFiltered();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const filename = `Kenvue_Precios_${now.toISOString().slice(0,10)}.xlsx`;
+
+  const wb = XLSX.utils.book_new();
+
+  // ── HOJA 1: DATOS ─────────────────────────────────────────────────────────
+  const headers = ['Producto','Marca','Retailer','Categoría','PVP (€)','PVR (€)','Descuento %','Volumen (ml)','€/100ml','URL'];
+
+  const rows = list.map(p => {
+    const disc = (p.pvr && p.pvp < p.pvr) ? Math.round((1 - p.pvp/p.pvr)*100) : '';
+    const per100 = (p.volume && p.volume > 0) ? parseFloat((p.pvp/p.volume*100).toFixed(2)) : '';
+    return [p.name, p.brand, p.retailer, p.category,
+            p.pvp, p.pvr || '', disc, p.volume || '', per100, p.url];
+  });
+
+  const wsData = [headers, ...rows];
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  ws['!cols'] = [
+    {wch:38},{wch:22},{wch:18},{wch:18},
+    {wch:10},{wch:10},{wch:12},{wch:12},{wch:10},{wch:50}
+  ];
+
+  if(mode === 'report'){
+    // Brand color map (ARGB hex, no #)
+    const brandFill = {
+      "Johnson's":            'FFdceef8',
+      'Le Petit Marseillais': 'FFd8f0e0',
+      'OGX':                  'FFfae8d8',
+      'Carefree':             'FFf0e0f8',
+      'o.b.':                 'FFfde0dc',
+    };
+    const brandFont = {
+      "Johnson's":            'FF1a7ab0',
+      'Le Petit Marseillais': 'FF2c8a44',
+      'OGX':                  'FFb05a18',
+      'Carefree':             'FF8a3090',
+      'o.b.':                 'FFb02828',
+    };
+
+    // Style header row
+    headers.forEach((_, ci) => {
+      const cellRef = XLSX.utils.encode_cell({r:0, c:ci});
+      if(!ws[cellRef]) return;
+      ws[cellRef].s = {
+        font: {bold:true, color:{rgb:'FFFFFFFF'}, sz:11},
+        fill: {fgColor:{rgb:'FF1a4fa0'}},
+        alignment: {horizontal:'center', vertical:'center', wrapText:true},
+        border: {bottom:{style:'medium', color:{rgb:'FFffffff'}}}
+      };
+    });
+
+    // Style data rows
+    rows.forEach((row, ri) => {
+      const brand = row[1];
+      const fill  = brandFill[brand]  || 'FFfafaf8';
+      const fcolor = brandFont[brand] || 'FF1e1812';
+      row.forEach((_, ci) => {
+        const cellRef = XLSX.utils.encode_cell({r:ri+1, c:ci});
+        if(!ws[cellRef]) return;
+        const isPrice = ci === 4;
+        const isDisc  = ci === 6;
+        ws[cellRef].s = {
+          font: {
+            color: {rgb: isDisc && row[6] ? 'FFb02828' : isPrice ? 'FF1e1812' : fcolor},
+            bold: isPrice,
+            sz: 10
+          },
+          fill: {fgColor:{rgb: fill}},
+          alignment: {horizontal: isPrice || isDisc ? 'center' : 'left', vertical:'center'},
+          border: {
+            bottom:{style:'thin', color:{rgb:'FFe4ddd6'}},
+            right: {style:'thin', color:{rgb:'FFe4ddd6'}}
+          },
+          numFmt: isPrice ? '#,##0.00" €"' : (isDisc && row[6] ? '0"%"' : '')
+        };
+      });
+    });
+
+    // Freeze top row
+    ws['!freeze'] = {xSplit:0, ySplit:1};
+
+    // ── HOJA 2: RESUMEN MEJORES PRECIOS ────────────────────────────────────
+    const groups = {};
+    list.forEach(p => {
+      if(!p.groupKey) return;
+      if(!groups[p.groupKey]) groups[p.groupKey] = {label:'', brand:'', category:'', entries:[]};
+      groups[p.groupKey].label    = p.name.replace(/\s+\d+ml$/, '').replace(/\s+x\d+$/, '');
+      groups[p.groupKey].brand    = p.brand;
+      groups[p.groupKey].category = p.category;
+      groups[p.groupKey].entries.push(p);
+    });
+
+    const summaryHeaders = ['Producto','Marca','Categoría','Retailer más barato','Precio mín. (€)','Precio máx. (€)','Ahorro (€)','Ahorro (%)'];
+    const summaryRows = Object.values(groups)
+      .filter(g => g.entries.length >= 2)
+      .map(g => {
+        const prices = g.entries.map(e => e.pvp);
+        const minP = Math.min(...prices);
+        const maxP = Math.max(...prices);
+        const best = g.entries.find(e => e.pvp === minP);
+        const saving = parseFloat((maxP - minP).toFixed(2));
+        const savingPct = Math.round((saving / maxP) * 100);
+        return [g.label, g.brand, g.category, best.retailer, minP, maxP, saving, savingPct];
+      })
+      .sort((a,b) => b[7]-a[7]); // ordenar por % ahorro desc
+
+    const ws2 = XLSX.utils.aoa_to_sheet([summaryHeaders, ...summaryRows]);
+    ws2['!cols'] = [{wch:36},{wch:22},{wch:18},{wch:20},{wch:14},{wch:14},{wch:12},{wch:12}];
+
+    // Header style for summary
+    summaryHeaders.forEach((_, ci) => {
+      const cellRef = XLSX.utils.encode_cell({r:0, c:ci});
+      if(!ws2[cellRef]) return;
+      ws2[cellRef].s = {
+        font: {bold:true, color:{rgb:'FFFFFFFF'}, sz:11},
+        fill: {fgColor:{rgb:'FF3a7a30'}},
+        alignment: {horizontal:'center', vertical:'center'}
+      };
+    });
+
+    // Data style for summary
+    summaryRows.forEach((row, ri) => {
+      row.forEach((_, ci) => {
+        const cellRef = XLSX.utils.encode_cell({r:ri+1, c:ci});
+        if(!ws2[cellRef]) return;
+        const isSaving = ci === 7;
+        ws2[cellRef].s = {
+          font: {bold: isSaving && row[7] > 20, color:{rgb: isSaving && row[7] > 20 ? 'FF3a7a30' : 'FF1e1812'}, sz:10},
+          fill: {fgColor:{rgb: ri%2===0 ? 'FFf7f5f2' : 'FFffffff'}},
+          alignment: {horizontal: ci > 3 ? 'center' : 'left', vertical:'center'},
+          border: {bottom:{style:'thin', color:{rgb:'FFe4ddd6'}}}
+        };
+      });
+    });
+
+    ws2['!freeze'] = {xSplit:0, ySplit:1};
+    XLSX.utils.book_append_sheet(wb, ws2, 'Resumen mejores precios');
+
+    // ── HOJA 3: METADATA ──────────────────────────────────────────────────
+    const ws3 = XLSX.utils.aoa_to_sheet([
+      ['Kenvue Price Tracker — España'],
+      [''],
+      ['Generado el:', dateStr],
+      ['Productos exportados:', list.length],
+      ['Fuente:', 'https://arigabri2008.github.io/Kenvue-Tracker/'],
+      [''],
+      ['Nota:', 'Precios de referencia extraídos automáticamente de retailers españoles.'],
+      ['', 'Pueden variar por promociones o disponibilidad de stock.'],
+    ]);
+    ws3['!cols'] = [{wch:25},{wch:60}];
+    XLSX.utils.book_append_sheet(wb, ws3, 'Info');
+  }
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Precios');
+  XLSX.writeFile(wb, filename);
+}
+
+
 renderList();
 loadLivePrices();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>
