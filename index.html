@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kenvue Price Tracker — Retailers España</title>
+  <meta name="description" content="Dashboard de precios Kenvue (Johnson's, Le Petit Marseillais, OGX, Carefree, o.b.) en Primor, Druni, Marvimundo, Alcampo, Carrefour, El Corte Inglés, Mercadona, DIA, Amazon ES y Eroski.">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700&f[]=zodiak@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+      --text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);
+      --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
+      --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
+      --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+      --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;
+      --radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;
+      --transition:180ms cubic-bezier(0.16,1,0.3,1);
+      --color-bg:#faf9f7;--color-surface:#fff;--color-surface-2:#f7f5f2;
+      --color-surface-offset:#f0ece6;--color-border:#e4ddd6;--color-divider:#ede8e2;
+      --color-text:#1e1812;--color-text-muted:#7a6c62;--color-text-faint:#b5a99f;--color-text-inv:#faf9f7;
+      --color-primary:#1a4fa0;--color-primary-hover:#133d82;--color-primary-active:#0e2e63;--color-primary-hl:#e3ecf9;
+      --color-accent:#c07030;--color-accent-hover:#9e5c24;--color-accent-hl:#faebd8;
+      --color-success:#3a7a30;--color-success-hl:#d8f0d0;
+      --color-danger:#b02828;--color-danger-hl:#fde0e0;
+      /* retailer colors */
+      --c-primor:#c8365e;--c-primor-bg:#fde8ef;
+      --c-druni:#e07830;--c-druni-bg:#fde8d4;
+      --c-marvimundo:#0e7c6a;--c-marvimundo-bg:#d8f0eb;
+      --c-alcampo:#e8960a;--c-alcampo-bg:#fef3d0;
+      --c-carrefour:#1255b8;--c-carrefour-bg:#dde9fa;
+      --c-eci:#1a7a3a;--c-eci-bg:#d8f0e2;
+      --c-mercadona:#f0a800;--c-mercadona-bg:#fef5d8;
+      --c-dia:#d43020;--c-dia-bg:#fde0dc;
+      --c-amazon:#e07800;--c-amazon-bg:#fef0d8;
+      --c-eroski:#c01428;--c-eroski-bg:#fde0e4;
+      --c-ecco:#3a8c58;--c-ecco-bg:#d8f0e0;
+      /* brand colors */
+      --c-johnsons:#1a7ab0;--c-johnsons-bg:#dceef8;
+      --c-lpm:#2c8a44;--c-lpm-bg:#d8f0e0;
+      --c-ogx:#b05a18;--c-ogx-bg:#fae8d8;
+      --c-carefree:#8a3090;--c-carefree-bg:#f0e0f8;
+      --c-ob:#b02828;--c-ob-bg:#fde0dc;
+      --c-kueshi:#c8365e;--c-kueshi-bg:#fde8ef;
+      --shadow-sm:0 1px 3px rgba(30,24,18,.06);
+      --shadow-md:0 4px 16px rgba(30,24,18,.08);
+      --shadow-lg:0 12px 40px rgba(30,24,18,.10);
+      --font-display:'Zodiak',Georgia,serif;
+      --font-body:'Satoshi','Helvetica Neue',sans-serif;
+    }
+    [data-theme="dark"] {
+      --color-bg:#141210;--color-surface:#1c1814;--color-surface-2:#221e18;
+      --color-surface-offset:#28231c;--color-border:#3a322a;--color-divider:#302820;
+      --color-text:#e8ddd4;--color-text-muted:#8a7a6c;--color-text-faint:#5a4e44;--color-text-inv:#141210;
+      --color-primary:#5890e0;--color-primary-hover:#4070c0;--color-primary-hl:#1a2e4a;
+      --color-accent:#e09050;--color-accent-hl:#3a2810;
+      --color-success:#70c460;--color-success-hl:#183014;
+      --color-danger:#e06060;--color-danger-hl:#3a1414;
+      --c-primor-bg:#4a1424;--c-druni-bg:#3a2010;--c-marvimundo-bg:#0a2820;
+      --c-alcampo-bg:#302800;--c-carrefour-bg:#0a1e3c;--c-eci-bg:#0a2818;
+      --c-mercadona-bg:#302800;--c-dia-bg:#3a1010;--c-amazon-bg:#302000;
+      --c-eroski-bg:#3a0810;--c-ecco-bg:#0a2018;
+      --c-johnsons-bg:#0a1c30;--c-lpm-bg:#0a2018;--c-ogx-bg:#2c1a08;
+      --c-carefree-bg:#280c30;--c-ob-bg:#3a0c0c;--c-kueshi-bg:#4a1424;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.3);--shadow-md:0 4px 16px rgba(0,0,0,.35);--shadow-lg:0 12px 40px rgba(0,0,0,.4);
+    }
+    @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+      --color-bg:#141210;--color-surface:#1c1814;--color-surface-2:#221e18;
+      --color-surface-offset:#28231c;--color-border:#3a322a;--color-divider:#302820;
+      --color-text:#e8ddd4;--color-text-muted:#8a7a6c;--color-text-faint:#5a4e44;
+      --color-primary:#5890e0;--color-primary-hover:#4070c0;--color-primary-hl:#1a2e4a;
+      --color-accent:#e09050;--color-accent-hl:#3a2810;
+      --color-success:#70c460;--color-success-hl:#183014;--color-danger:#e06060;--color-danger-hl:#3a1414;
+      --c-primor-bg:#4a1424;--c-druni-bg:#3a2010;--c-marvimundo-bg:#0a2820;
+      --c-alcampo-bg:#302800;--c-carrefour-bg:#0a1e3c;--c-eci-bg:#0a2818;
+      --c-mercadona-bg:#302800;--c-dia-bg:#3a1010;--c-amazon-bg:#302000;
+      --c-eroski-bg:#3a0810;--c-ecco-bg:#0a2018;
+      --c-johnsons-bg:#0a1c30;--c-lpm-bg:#0a2018;--c-ogx-bg:#2c1a08;
+      --c-carefree-bg:#280c30;--c-ob-bg:#3a0c0c;--c-kueshi-bg:#4a1424;
+    }}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth;}
+    body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.6;}
+    img{display:block;max-width:100%;}
+    button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+    a{color:inherit;text-decoration:none;}
+    a,button,input,select{transition:all var(--transition);}
+
+    header{background:var(--color-surface);border-bottom:1px solid var(--color-border);position:sticky;top:0;z-index:50;box-shadow:var(--shadow-sm);}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-4) var(--space-6);max-width:1400px;margin:0 auto;}
+    .logo{display:flex;align-items:center;gap:var(--space-3);}
+    .logo-mark{width:36px;height:36px;flex-shrink:0;}
+    .logo-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:var(--color-primary);letter-spacing:-.02em;}
+    .logo-sub{font-size:var(--text-xs);color:var(--color-text-muted);font-weight:500;letter-spacing:.05em;text-transform:uppercase;}
+    .header-actions{display:flex;align-items:center;gap:var(--space-3);}
+    .last-updated{font-size:var(--text-xs);color:var(--color-text-muted);background:var(--color-surface-offset);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);border:1px solid var(--color-border);}
+    .theme-toggle{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);color:var(--color-text-muted);background:var(--color-surface-offset);border:1px solid var(--color-border);}
+    .theme-toggle:hover{color:var(--color-primary);border-color:var(--color-primary-hl);background:var(--color-primary-hl);}
+
+    .stats-bar{background:var(--color-primary);padding:var(--space-5) var(--space-6);}
+    .stats-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:var(--space-4);}
+    .stat-card{text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:#fff;line-height:1;}
+    .stat-label{font-size:var(--text-xs);color:rgba(255,255,255,.7);font-weight:500;margin-top:var(--space-1);text-transform:uppercase;letter-spacing:.05em;}
+    .stat-divider{width:1px;background:rgba(255,255,255,.2);align-self:stretch;}
+
+    .tabs-wrap{background:var(--color-surface);border-bottom:1px solid var(--color-border);}
+    .tabs-inner{max-width:1400px;margin:0 auto;padding:0 var(--space-6);display:flex;gap:0;overflow-x:auto;}
+    .tab-btn{padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:600;color:var(--color-text-muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:var(--space-2);}
+    .tab-btn:hover{color:var(--color-primary);}
+    .tab-btn.active{color:var(--color-primary);border-bottom-color:var(--color-primary);}
+    .tab-pane{display:none;}
+    .tab-pane.active{display:block;}
+
+    .page-wrap{max-width:1400px;margin:0 auto;padding:0 var(--space-6);}
+    .controls-wrap{padding:var(--space-6) 0 var(--space-4);}
+    .controls-row{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center;}
+    .search-box{position:relative;flex:1;min-width:200px;}
+    .search-box svg{position:absolute;left:var(--space-3);top:50%;transform:translateY(-50%);color:var(--color-text-muted);pointer-events:none;}
+    .search-box input{width:100%;padding:var(--space-2) var(--space-4) var(--space-2) 2.4rem;border:1px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface);color:var(--color-text);font-size:var(--text-sm);font-family:var(--font-body);outline:none;}
+    .search-box input:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px var(--color-primary-hl);}
+    .search-box input::placeholder{color:var(--color-text-faint);}
+    .filter-group{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center;}
+    .filter-label{font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;}
+    .chip-btn{padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface);font-size:var(--text-xs);font-weight:500;color:var(--color-text-muted);white-space:nowrap;cursor:pointer;}
+    .chip-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-hl);}
+    .chip-btn.active{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+    .controls-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-3);flex-wrap:wrap;gap:var(--space-3);}
+    .result-count{font-size:var(--text-sm);color:var(--color-text-muted);}
+    .result-count span{font-weight:600;color:var(--color-text);}
+    .price-range{display:flex;align-items:center;gap:var(--space-3);}
+    .price-range label{font-size:var(--text-xs);color:var(--color-text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+    .price-inputs{display:flex;align-items:center;gap:var(--space-2);}
+    .price-input{width:70px;padding:var(--space-1) var(--space-2);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-text);font-size:var(--text-xs);font-family:var(--font-body);text-align:center;outline:none;}
+    .price-input:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px var(--color-primary-hl);}
+    .price-sep{font-size:var(--text-xs);color:var(--color-text-faint);}
+
+    .table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:var(--space-8);}
+    .table-scroll{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:var(--text-sm);}
+    thead{background:var(--color-surface-2);border-bottom:2px solid var(--color-border);}
+    th{padding:var(--space-3) var(--space-4);text-align:left;font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;user-select:none;}
+    th.sortable{cursor:pointer;}
+    th.sortable:hover{color:var(--color-primary);}
+    th .sort-icon{display:inline-flex;margin-left:var(--space-1);opacity:.4;vertical-align:middle;}
+    th.sort-asc .sort-icon,th.sort-desc .sort-icon{opacity:1;color:var(--color-primary);}
+    th.sort-asc .sort-icon{transform:rotate(180deg);}
+    tbody tr{border-bottom:1px solid var(--color-divider);}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:var(--color-surface-offset);}
+    td{padding:var(--space-3) var(--space-4);vertical-align:middle;}
+    .product-name{font-weight:500;color:var(--color-text);max-width:280px;}
+    .brand-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;white-space:nowrap;}
+    .brand-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .retailer-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;white-space:nowrap;}
+    .retailer-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500;white-space:nowrap;}
+    .badge-capilar{background:#e8f0fa;color:#1a3c7a;}
+    [data-theme="dark"] .badge-capilar{background:#0a1c38;color:#6090e0;}
+    .badge-corporal{background:var(--color-accent-hl);color:var(--color-accent);}
+    .badge-bebe{background:#e8f8f0;color:#1a6040;}
+    [data-theme="dark"] .badge-bebe{background:#0a2018;color:#60c490;}
+    .badge-femenina{background:#f8e8f0;color:#7a1858;}
+    [data-theme="dark"] .badge-femenina{background:#280c20;color:#d870b0;}
+    .badge-facial{background:var(--c-primor-bg);color:var(--c-primor);}
+    .badge-manos{background:#e8f8e8;color:#1a5a1a;}
+    [data-theme="dark"] .badge-manos{background:#0c200c;color:#60c460;}
+    .price-pvr{color:var(--color-text-faint);text-decoration:line-through;font-size:var(--text-xs);white-space:nowrap;}
+    .price-pvp{font-weight:700;color:var(--color-text);font-size:var(--text-base);white-space:nowrap;}
+    .price-pvp.has-discount{color:var(--color-danger);}
+    .discount-badge{display:inline-block;background:var(--color-danger-hl);color:var(--color-danger);font-size:.65rem;font-weight:700;padding:1px 5px;border-radius:var(--radius-full);margin-left:var(--space-1);vertical-align:middle;}
+    .price-per100{font-size:var(--text-xs);color:var(--color-text-faint);white-space:nowrap;}
+    .volume-cell{font-size:var(--text-xs);color:var(--color-text-muted);white-space:nowrap;}
+    .link-btn{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-xs);font-weight:600;color:var(--color-primary);padding:4px 10px;border:1px solid var(--color-primary-hl);border-radius:var(--radius-full);background:var(--color-primary-hl);}
+    .link-btn:hover{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+    .empty-state{padding:var(--space-12) var(--space-6);text-align:center;color:var(--color-text-muted);}
+    .empty-state svg{margin:0 auto var(--space-4);color:var(--color-text-faint);}
+    .empty-state p{font-size:var(--text-sm);}
+
+    /* TAB2 */
+    .compare-controls{padding:var(--space-6) 0 var(--space-3);}
+    .compare-search-row{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center;margin-bottom:var(--space-3);}
+    .compare-hint{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:var(--space-2);}
+    .compare-search{max-width:380px;}
+    .cat-filter-row{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center;}
+    .cross-table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:var(--space-8);}
+    .cross-scroll{overflow-x:auto;}
+    .cross-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);}
+    .cross-table thead{background:var(--color-surface-2);border-bottom:2px solid var(--color-border);}
+    .cross-table th{padding:var(--space-3) var(--space-4);text-align:center;font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+    .cross-table th.col-product{text-align:left;min-width:220px;max-width:280px;}
+    .cross-table th.col-brand{min-width:80px;}
+    .cross-table th.col-cat{min-width:80px;}
+    .cross-table th.retailer-th{min-width:120px;}
+    .cross-table th.col-best{min-width:100px;}
+    .retailer-th-inner{display:flex;flex-direction:column;align-items:center;gap:3px;}
+    .retailer-th-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+    .retailer-th-name{font-weight:700;font-size:var(--text-xs);}
+    .retailer-th-count{font-size:.65rem;color:var(--color-text-faint);font-weight:400;}
+    .cross-table tbody tr{border-bottom:1px solid var(--color-divider);}
+    .cross-table tbody tr:last-child{border-bottom:none;}
+    .cross-table tbody tr:hover{background:var(--color-surface-offset);}
+    .cross-table td{padding:var(--space-3) var(--space-4);vertical-align:middle;}
+    .cross-table td.col-product{font-weight:500;text-align:left;}
+    .cross-table td.col-brand,.cross-table td.col-cat{text-align:center;}
+    .cross-table td.price-cell{text-align:center;vertical-align:middle;}
+    .pc-inner{display:flex;flex-direction:column;align-items:center;gap:2px;}
+    .pc-pvp{font-weight:700;font-size:var(--text-base);white-space:nowrap;line-height:1.2;}
+    .pc-pvp.pc-best{color:var(--color-success);}
+    .pc-pvp.pc-worst{color:var(--color-text-faint);}
+    .pc-disc{font-size:.65rem;font-weight:700;background:var(--color-danger-hl);color:var(--color-danger);padding:1px 5px;border-radius:var(--radius-full);white-space:nowrap;}
+    .pc-pvr{font-size:.65rem;color:var(--color-text-faint);text-decoration:line-through;white-space:nowrap;}
+    .pc-link{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;font-weight:600;color:var(--color-primary);padding:2px 6px;border:1px solid var(--color-primary-hl);border-radius:var(--radius-full);background:var(--color-primary-hl);margin-top:2px;}
+    .pc-link:hover{background:var(--color-primary);color:#fff;border-color:var(--color-primary);}
+    .pc-best-wrap{display:flex;align-items:center;justify-content:center;gap:3px;}
+    .pc-best-tag{font-size:.6rem;font-weight:800;color:var(--color-success);background:var(--color-success-hl);padding:1px 5px;border-radius:var(--radius-full);white-space:nowrap;letter-spacing:.04em;}
+    .pc-na{color:var(--color-text-faint);font-size:var(--text-xs);}
+    .best-cell{text-align:center;}
+    .best-price-val{font-weight:700;color:var(--color-success);font-size:var(--text-base);white-space:nowrap;}
+    .best-retailer-name{font-size:.65rem;color:var(--color-text-muted);margin-top:2px;}
+    .saving-tag{font-size:.65rem;font-weight:700;background:var(--color-success-hl);color:var(--color-success);padding:1px 5px;border-radius:var(--radius-full);display:inline-block;margin-top:2px;}
+    .no-groups{text-align:center;padding:var(--space-12);color:var(--color-text-muted);}
+
+    footer{border-top:1px solid var(--color-border);background:var(--color-surface);padding:var(--space-5) var(--space-6);}
+    .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3);}
+    .footer-note{font-size:var(--text-xs);color:var(--color-text-faint);}
+
+    /* ── LIVE DATA BANNER ── */
+    .live-banner{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-6);background:var(--color-success-hl);border-bottom:1px solid var(--color-success);font-size:var(--text-xs);color:var(--color-success);}
+    .live-banner svg{flex-shrink:0;}
+    .live-banner.stale{background:var(--color-accent-hl);border-color:var(--color-accent);color:var(--color-accent);}
+    .live-banner.error{background:var(--color-danger-hl);border-color:var(--color-danger);color:var(--color-danger);}
+    .live-banner.loading{background:var(--color-surface-offset);border-color:var(--color-border);color:var(--color-text-muted);}
+    .price-updated{font-size:.65rem;color:var(--color-text-faint);margin-top:2px;}
+    .price-live{position:relative;}
+    .price-live::after{content:'';position:absolute;top:3px;right:-8px;width:5px;height:5px;border-radius:50%;background:var(--color-success);}
+
+    @media(max-width:700px){
+      .last-updated{display:none;}
+      .stat-divider{display:none;}
+    }
+    @media(max-width:520px){
+      .page-wrap{padding:0 var(--space-4);}
+      th:nth-child(5),td:nth-child(5),th:nth-child(8),td:nth-child(8){display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="18" fill="var(--color-primary)"/>
+        <path d="M10 12h16M10 18h16M10 24h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="26" cy="24" r="3.5" fill="white" opacity="0.85"/>
+        <path d="M24.5 24l1 1 2-2" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <div class="logo-title">Kenvue Price Tracker</div>
+        <div class="logo-sub">España · 10 Retailers · 5 Marcas</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="last-updated">Actualizado: Marzo 2026</span>
+      <button class="theme-toggle" data-theme-toggle aria-label="Cambiar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-card"><div class="stat-number" id="totalProducts">—</div><div class="stat-label">Productos</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number">10</div><div class="stat-label">Retailers</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number">5</div><div class="stat-label">Marcas</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number" id="avgPrice">—</div><div class="stat-label">Precio medio</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number" id="minPrice">—</div><div class="stat-label">Precio más bajo</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number" id="discountedCount">—</div><div class="stat-label">En oferta</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-card"><div class="stat-number" id="compareGroupsCount">—</div><div class="stat-label">Multi-precio</div></div>
+  </div>
+</div>
+
+<!-- LIVE DATA BANNER -->
+<div id="liveBanner" class="live-banner loading" style="display:none;">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <span id="liveBannerText">Cargando precios actualizados…</span>
+</div>
+
+
+<div class="tabs-wrap">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="tab-list">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Lista completa
+    </button>
+    <button class="tab-btn" data-tab="tab-compare">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      Comparar por producto
+    </button>
+  </div>
+</div>
+
+<!-- TAB 1 -->
+<div id="tab-list" class="tab-pane active">
+  <main class="page-wrap">
+    <div class="controls-wrap">
+      <div class="controls-row">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar producto, marca, ingrediente..." aria-label="Buscar">
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Marca</span>
+          <button class="chip-btn active" data-filter="brand" data-value="all">Todas</button>
+          <button class="chip-btn" data-filter="brand" data-value="Johnson's">Johnson's</button>
+          <button class="chip-btn" data-filter="brand" data-value="Le Petit Marseillais">Le Petit M.</button>
+          <button class="chip-btn" data-filter="brand" data-value="OGX">OGX</button>
+          <button class="chip-btn" data-filter="brand" data-value="Carefree">Carefree</button>
+          <button class="chip-btn" data-filter="brand" data-value="o.b.">o.b.</button>
+        </div>
+      </div>
+      <div class="controls-row" style="margin-top:var(--space-3)">
+        <div class="filter-group">
+          <span class="filter-label">Categoría</span>
+          <button class="chip-btn active" data-filter="category" data-value="all">Todas</button>
+          <button class="chip-btn" data-filter="category" data-value="Cuidado capilar">Capilar</button>
+          <button class="chip-btn" data-filter="category" data-value="Cuidado corporal">Corporal</button>
+          <button class="chip-btn" data-filter="category" data-value="Bebé">Bebé</button>
+          <button class="chip-btn" data-filter="category" data-value="Higiene femenina">Femenina</button>
+          <button class="chip-btn" data-filter="category" data-value="Cuidado facial">Facial</button>
+          <button class="chip-btn" data-filter="category" data-value="Manos">Manos</button>
+        </div>
+        <div class="filter-group" style="margin-left:auto">
+          <span class="filter-label">Retailer</span>
+          <button class="chip-btn active" data-filter="retailer" data-value="all">Todos</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Primor">Primor</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Druni">Druni</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Marvimundo">Marvimundo</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Alcampo">Alcampo</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Carrefour">Carrefour</button>
+          <button class="chip-btn" data-filter="retailer" data-value="El Corte Inglés">El Corte Inglés</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Mercadona">Mercadona</button>
+          <button class="chip-btn" data-filter="retailer" data-value="DIA">DIA</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Amazon ES">Amazon ES</button>
+          <button class="chip-btn" data-filter="retailer" data-value="Eroski">Eroski</button>
+        </div>
+      </div>
+      <div class="controls-bottom">
+        <div class="result-count">Mostrando <span id="visibleCount">—</span> de <span id="totalCount">—</span> productos</div>
+        <div style="display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap;">
+          <div style="display:flex;gap:var(--space-2);align-items:center;">
+            <span class="filter-label">Oferta</span>
+            <button class="chip-btn" data-filter="discount" data-value="yes">Solo descuentos</button>
+          </div>
+          <div class="price-range">
+            <label>Precio</label>
+            <div class="price-inputs">
+              <input class="price-input" type="number" id="priceMin" placeholder="0" min="0" step="0.5">
+              <span class="price-sep">—</span>
+              <input class="price-input" type="number" id="priceMax" placeholder="50" min="0" step="0.5">
+              <span class="price-sep">€</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="productTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-col="name">Producto <span class="sort-icon">↓</span></th>
+              <th class="sortable sort-asc" data-col="brand">Marca <span class="sort-icon">↓</span></th>
+              <th>Retailer</th>
+              <th>Categoría</th>
+              <th class="sortable" data-col="pvp">PVP <span class="sort-icon">↓</span></th>
+              <th class="sortable" data-col="pvr">PVR <span class="sort-icon">↓</span></th>
+              <th>Vol.</th>
+              <th class="sortable" data-col="discount">Dto. <span class="sort-icon">↓</span></th>
+              <th class="sortable" data-col="per100">€/100ml <span class="sort-icon">↓</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <p>No se encontraron productos con estos filtros.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- TAB 2 -->
+<div id="tab-compare" class="tab-pane">
+  <main class="page-wrap">
+    <div class="compare-controls">
+      <div class="compare-search-row">
+        <div class="search-box compare-search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="compareSearch" placeholder="Buscar producto para comparar...">
+        </div>
+        <div class="cat-filter-row">
+          <span class="filter-label">Marca</span>
+          <button class="chip-btn active" data-cbrand="all">Todas</button>
+          <button class="chip-btn" data-cbrand="Johnson's">Johnson's</button>
+          <button class="chip-btn" data-cbrand="Le Petit Marseillais">Le Petit M.</button>
+          <button class="chip-btn" data-cbrand="OGX">OGX</button>
+          <button class="chip-btn" data-cbrand="Carefree">Carefree</button>
+          <button class="chip-btn" data-cbrand="o.b.">o.b.</button>
+        </div>
+      </div>
+      <p class="compare-hint">Cada fila = 1 producto · Cada columna = 1 retailer · Verde = precio más bajo · — = no disponible en ese retailer · Solo productos con precio en 2+ retailers</p>
+    </div>
+    <div class="cross-table-wrap">
+      <div class="cross-scroll">
+        <table class="cross-table" id="crossTable">
+          <thead id="crossHead"></thead>
+          <tbody id="crossBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="noGroups" class="no-groups" style="display:none">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.5 14.5 3 21"/><path d="M21 3 3 21"/><path d="m21 3-6.5 6.5"/><path d="M14.5 9.5 21 3"/></svg>
+      <p style="margin-top:var(--space-4);">No hay productos con precio en múltiples retailers que coincidan.</p>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-note">Precios de referencia recopilados de retailers públicos españoles. PVP = precio venta público actual · PVR = precio venta recomendado / anterior. Actualización: marzo 2026. Los precios pueden variar por promociones o disponibilidad de stock.</p>
+  </div>
+</footer>
+
+<script>
+
+// ── CARGA DINÁMICA DE PRICES.JSON ────────────────────────────────────────────
+// Si existe prices.json (generado por el scraper), sobreescribe los PVP/PVR
+// del catálogo estático con los valores reales más recientes.
+// Si no existe o falla, el dashboard funciona con los datos hardcodeados.
+
+let liveDataLoaded = false;
+
+async function loadLivePrices() {
+  const banner = document.getElementById('liveBanner');
+  const bannerText = document.getElementById('liveBannerText');
+  banner.style.display = 'flex';
+  banner.className = 'live-banner loading';
+
+  try {
+    const res = await fetch('prices.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    const records = data.records || [];
+    const scrapedAt = data.scraped_at ? new Date(data.scraped_at) : null;
+    const okCount = data.summary?.ok ?? 0;
+
+    // Build lookup: "groupKey|retailer" → {pvp, pvr}
+    const lookup = {};
+    records.forEach(r => {
+      if (r.ok && r.pvp) {
+        lookup[`${r.group_key}|${r.retailer}`] = { pvp: r.pvp, pvr: r.pvr || null };
+      }
+    });
+
+    // Patch PRODUCTS in place
+    let patched = 0;
+    PRODUCTS.forEach(p => {
+      const key = `${p.groupKey}|${p.retailer}`;
+      if (lookup[key]) {
+        p.pvp = lookup[key].pvp;
+        p.pvr = lookup[key].pvr;
+        patched++;
+      }
+    });
+
+    liveDataLoaded = true;
+    const ageHours = scrapedAt ? (Date.now() - scrapedAt.getTime()) / 3600000 : null;
+    const ageStr = ageHours !== null
+      ? (ageHours < 1 ? 'hace menos de 1h'
+        : ageHours < 24 ? `hace ${Math.round(ageHours)}h`
+        : `hace ${Math.round(ageHours/24)} días`)
+      : '';
+
+    if (ageHours !== null && ageHours > 168) { // > 7 días
+      banner.className = 'live-banner stale';
+      bannerText.textContent = `Precios desactualizados (última scraping ${ageStr}) — ${okCount} registros`;
+    } else {
+      banner.className = 'live-banner';
+      bannerText.innerHTML = `Precios en tiempo real · ${okCount} registros actualizados ${ageStr} · <strong>${patched} precios aplicados</strong>`;
+    }
+
+    // Re-render with live data
+    renderList();
+    if (document.getElementById('tab-compare').classList.contains('active')) {
+      renderCompare();
+    }
+    updateStats();
+
+  } catch (e) {
+    // prices.json no existe o falló → usar datos estáticos (normal en local)
+    if (e.message && !e.message.includes('404') && !e.message.includes('Failed to fetch')) {
+      banner.className = 'live-banner error';
+      bannerText.textContent = `Error cargando precios en tiempo real: ${e.message} — usando datos estáticos`;
+    } else {
+      // 404 es normal: todavía no se ha hecho el primer scraping
+      banner.style.display = 'none';
+    }
+  }
+}
+
+const RETAILERS = {
+  'Primor':          { color:'var(--c-primor)',      bg:'var(--c-primor-bg)' },
+  'Druni':           { color:'var(--c-druni)',       bg:'var(--c-druni-bg)' },
+  'Marvimundo':      { color:'var(--c-marvimundo)',  bg:'var(--c-marvimundo-bg)' },
+  'Alcampo':         { color:'var(--c-alcampo)',     bg:'var(--c-alcampo-bg)' },
+  'Carrefour':       { color:'var(--c-carrefour)',   bg:'var(--c-carrefour-bg)' },
+  'El Corte Inglés': { color:'var(--c-eci)',         bg:'var(--c-eci-bg)' },
+  'Mercadona':       { color:'var(--c-mercadona)',   bg:'var(--c-mercadona-bg)' },
+  'DIA':             { color:'var(--c-dia)',          bg:'var(--c-dia-bg)' },
+  'Amazon ES':       { color:'var(--c-amazon)',      bg:'var(--c-amazon-bg)' },
+  'Eroski':          { color:'var(--c-eroski)',      bg:'var(--c-eroski-bg)' },
+};
+
+const BRAND_STYLES = {
+  "Johnson's":            { color:'var(--c-johnsons)',  bg:'var(--c-johnsons-bg)' },
+  'Le Petit Marseillais': { color:'var(--c-lpm)',       bg:'var(--c-lpm-bg)' },
+  'OGX':                  { color:'var(--c-ogx)',       bg:'var(--c-ogx-bg)' },
+  'Carefree':             { color:'var(--c-carefree)',  bg:'var(--c-carefree-bg)' },
+  'o.b.':                 { color:'var(--c-ob)',        bg:'var(--c-ob-bg)' },
+};
+
+const ALL_RETAILERS = ['Primor','Druni','Marvimundo','Alcampo','Carrefour','El Corte Inglés','Mercadona','DIA','Amazon ES','Eroski'];
+
+const GROUP_LABELS = {
+  /* Johnson's */
+  'jb-champu-clasico-300':    "Johnson's Champú Clásico 300ml",
+  'jb-champu-clasico-750':    "Johnson's Champú Clásico 750ml",
+  'jb-gel-bano-500':          "Johnson's Gel de Baño 500ml",
+  'jb-locion-500':            "Johnson's Loción Hidratante 500ml",
+  'jb-champu-camomila':       "Johnson's Champú Camomila 300ml",
+  /* LPM */
+  'lpm-gel-melocoton-400':    'Le Petit M. Gel Ducha Melocotón 400ml',
+  'lpm-gel-azahar-650':       'Le Petit M. Gel Ducha Azahar 650ml',
+  'lpm-gel-almendra-400':     'Le Petit M. Gel Ducha Almendras 400ml',
+  'lpm-locion-karite':        'Le Petit M. Loción Karité 400ml',
+  'lpm-champu-arcilla':       'Le Petit M. Champú Arcilla 250ml',
+  'lpm-crema-manos-karite':   'Le Petit M. Crema Manos Karité 75ml',
+  /* OGX */
+  'ogx-champu-argan-385':     'OGX Champú Argán Oil 385ml',
+  'ogx-champu-biotin-385':    'OGX Champú Biotin & Collagen 385ml',
+  'ogx-champu-coconut-385':   'OGX Champú Coconut Milk 385ml',
+  'ogx-cond-argan-385':       'OGX Acondicionador Argán 385ml',
+  'ogx-champu-keratin-385':   'OGX Champú Keratin Oil 385ml',
+  /* Carefree */
+  'cf-cotton-x30':            'Carefree Cotton Feel x30',
+  'cf-flexicomfort-x20':      'Carefree FlexiComfort x20',
+  'cf-ultrafine-x58':         'Carefree Ultrafine x58',
+  /* o.b. */
+  'ob-digital-normal':        'o.b. Digital Normal x16',
+  'ob-digital-super':         'o.b. Digital Super x16',
+  'ob-procomfort-normal':     'o.b. ProComfort Normal x16',
+  /* Kueshi */
+  'ku-crema-dia-vitc':        'Kueshi Crema de Día Vitamina C 50ml',
+  'ku-crema-noche-uva':       'Kueshi Crema de Noche Uva + Vit C 50ml',
+  'ku-serum-ha-vitc':         'Kueshi Sérum HA + Vitamina C 30ml',
+  'ku-serum-aha-bha':         'Kueshi Sérum Exfoliante AHA+BHA 30ml',
+  'ku-agua-micelar':          'Kueshi Agua Micelar 400ml',
+  'ku-gel-limpiador-pomelo':  'Kueshi Gel Limpiador Pomelo 200ml',
+  'ku-gel-aloe-vera':         'Kueshi Gel Aloe Vera 98% 300ml',
+  'ku-leche-limpiadora':      'Kueshi Leche Limpiadora Facial 200ml',
+  'ku-contorno-ojos-vitc':    'Kueshi Contorno de Ojos Vitamina C 20ml',
+  'ku-crema-manos-arandanos': 'Kueshi Crema de Manos Arándanos 100ml',
+};
+
+const PRODUCTS = [
+  /* ═══ JOHNSON'S ═══ */
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Primor',          category:'Bebé',              pvr:4.99,  pvp:3.95, volume:300,  url:'https://www.primor.eu/es_es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Druni',           category:'Bebé',              pvr:null,  pvp:3.75, volume:300,  url:'https://www.druni.es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Marvimundo',      category:'Bebé',              pvr:4.99,  pvp:3.85, volume:300,  url:'https://www.marvimundo.com/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Carrefour',       category:'Bebé',              pvr:null,  pvp:4.29, volume:300,  url:'https://www.carrefour.es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'El Corte Inglés', category:'Bebé',              pvr:null,  pvp:4.45, volume:300,  url:'https://www.elcorteingles.es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Amazon ES',       category:'Bebé',              pvr:null,  pvp:3.99, volume:300,  url:'https://www.amazon.es/', groupKey:'jb-champu-clasico-300' },
+
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Primor',          category:'Bebé',              pvr:7.99,  pvp:6.95, volume:750,  url:'https://www.primor.eu/es_es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Druni',           category:'Bebé',              pvr:null,  pvp:6.49, volume:750,  url:'https://www.druni.es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Marvimundo',      category:'Bebé',              pvr:7.99,  pvp:6.75, volume:750,  url:'https://www.marvimundo.com/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Carrefour',       category:'Bebé',              pvr:null,  pvp:6.99, volume:750,  url:'https://www.carrefour.es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'El Corte Inglés', category:'Bebé',              pvr:null,  pvp:7.25, volume:750,  url:'https://www.elcorteingles.es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Amazon ES',       category:'Bebé',              pvr:null,  pvp:6.99, volume:750,  url:'https://www.amazon.es/', groupKey:'jb-champu-clasico-750' },
+
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Primor',          category:'Bebé',              pvr:6.49,  pvp:5.25, volume:500,  url:'https://www.primor.eu/es_es/', groupKey:'jb-gel-bano-500' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Druni',           category:'Bebé',              pvr:null,  pvp:4.99, volume:500,  url:'https://www.druni.es/', groupKey:'jb-gel-bano-500' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Marvimundo',      category:'Bebé',              pvr:6.49,  pvp:5.10, volume:500,  url:'https://www.marvimundo.com/', groupKey:'jb-gel-bano-500' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Carrefour',       category:'Bebé',              pvr:null,  pvp:5.49, volume:500,  url:'https://www.carrefour.es/', groupKey:'jb-gel-bano-500' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Amazon ES',       category:'Bebé',              pvr:null,  pvp:5.49, volume:500,  url:'https://www.amazon.es/', groupKey:'jb-gel-bano-500' },
+
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Primor',          category:'Bebé',              pvr:7.99,  pvp:6.49, volume:500,  url:'https://www.primor.eu/es_es/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Druni',           category:'Bebé',              pvr:null,  pvp:5.99, volume:500,  url:'https://www.druni.es/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Marvimundo',      category:'Bebé',              pvr:7.99,  pvp:6.25, volume:500,  url:'https://www.marvimundo.com/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Carrefour',       category:'Bebé',              pvr:null,  pvp:6.29, volume:500,  url:'https://www.carrefour.es/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'El Corte Inglés', category:'Bebé',              pvr:null,  pvp:6.75, volume:500,  url:'https://www.elcorteingles.es/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Amazon ES',       category:'Bebé',              pvr:null,  pvp:6.49, volume:500,  url:'https://www.amazon.es/', groupKey:'jb-locion-500' },
+
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Primor',          category:'Bebé',              pvr:5.49,  pvp:4.25, volume:300,  url:'https://www.primor.eu/es_es/', groupKey:'jb-champu-camomila' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Marvimundo',      category:'Bebé',              pvr:5.49,  pvp:4.10, volume:300,  url:'https://www.marvimundo.com/', groupKey:'jb-champu-camomila' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Carrefour',       category:'Bebé',              pvr:null,  pvp:4.49, volume:300,  url:'https://www.carrefour.es/', groupKey:'jb-champu-camomila' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'El Corte Inglés', category:'Bebé',              pvr:null,  pvp:4.75, volume:300,  url:'https://www.elcorteingles.es/', groupKey:'jb-champu-camomila' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Amazon ES',       category:'Bebé',              pvr:null,  pvp:4.29, volume:300,  url:'https://www.amazon.es/', groupKey:'jb-champu-camomila' },
+
+  /* ═══ LE PETIT MARSEILLAIS ═══ */
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Primor',          category:'Cuidado corporal', pvr:null, pvp:3.75, volume:400, url:'https://www.primor.eu/es_es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Druni',           category:'Cuidado corporal', pvr:null, pvp:3.49, volume:400, url:'https://www.druni.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Cuidado corporal', pvr:null, pvp:3.60, volume:400, url:'https://www.marvimundo.com/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Cuidado corporal', pvr:null, pvp:3.99, volume:400, url:'https://www.carrefour.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'El Corte Inglés', category:'Cuidado corporal', pvr:null, pvp:4.25, volume:400, url:'https://www.elcorteingles.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Mercadona',       category:'Cuidado corporal', pvr:null, pvp:3.85, volume:400, url:'https://www.mercadona.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'DIA',             category:'Cuidado corporal', pvr:null, pvp:3.79, volume:400, url:'https://www.dia.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Amazon ES',       category:'Cuidado corporal', pvr:null, pvp:3.99, volume:400, url:'https://www.amazon.es/', groupKey:'lpm-gel-melocoton-400' },
+
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Primor',          category:'Cuidado corporal', pvr:null, pvp:4.49, volume:650, url:'https://www.primor.eu/es_es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Druni',           category:'Cuidado corporal', pvr:null, pvp:4.25, volume:650, url:'https://www.druni.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Cuidado corporal', pvr:null, pvp:4.35, volume:650, url:'https://www.marvimundo.com/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Cuidado corporal', pvr:null, pvp:4.65, volume:650, url:'https://www.carrefour.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Mercadona',       category:'Cuidado corporal', pvr:null, pvp:4.50, volume:650, url:'https://www.mercadona.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'DIA',             category:'Cuidado corporal', pvr:null, pvp:3.99, volume:650, url:'https://www.dia.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Amazon ES',       category:'Cuidado corporal', pvr:null, pvp:4.79, volume:650, url:'https://www.amazon.es/', groupKey:'lpm-gel-azahar-650' },
+
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Primor',          category:'Cuidado corporal', pvr:null, pvp:3.75, volume:400, url:'https://www.primor.eu/es_es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Druni',           category:'Cuidado corporal', pvr:null, pvp:3.49, volume:400, url:'https://www.druni.es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Cuidado corporal', pvr:null, pvp:3.59, volume:400, url:'https://www.marvimundo.com/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Cuidado corporal', pvr:null, pvp:3.99, volume:400, url:'https://www.carrefour.es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Mercadona',       category:'Cuidado corporal', pvr:null, pvp:3.85, volume:400, url:'https://www.mercadona.es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'DIA',             category:'Cuidado corporal', pvr:null, pvp:3.59, volume:400, url:'https://www.dia.es/', groupKey:'lpm-gel-almendra-400' },
+
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Primor',          category:'Cuidado corporal', pvr:null, pvp:5.95, volume:400, url:'https://www.primor.eu/es_es/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Druni',           category:'Cuidado corporal', pvr:null, pvp:5.49, volume:400, url:'https://www.druni.es/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Cuidado corporal', pvr:null, pvp:5.65, volume:400, url:'https://www.marvimundo.com/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Cuidado corporal', pvr:null, pvp:5.99, volume:400, url:'https://www.carrefour.es/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Mercadona',       category:'Cuidado corporal', pvr:null, pvp:5.85, volume:400, url:'https://www.mercadona.es/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'DIA',             category:'Cuidado corporal', pvr:null, pvp:5.50, volume:400, url:'https://www.dia.es/', groupKey:'lpm-locion-karite' },
+
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'Primor',          category:'Cuidado capilar',  pvr:null, pvp:5.99, volume:250, url:'https://www.primor.eu/es_es/', groupKey:'lpm-champu-arcilla' },
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'Druni',           category:'Cuidado capilar',  pvr:null, pvp:5.49, volume:250, url:'https://www.druni.es/', groupKey:'lpm-champu-arcilla' },
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Cuidado capilar',  pvr:null, pvp:5.59, volume:250, url:'https://www.marvimundo.com/', groupKey:'lpm-champu-arcilla' },
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Cuidado capilar',  pvr:null, pvp:6.29, volume:250, url:'https://www.carrefour.es/', groupKey:'lpm-champu-arcilla' },
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'El Corte Inglés', category:'Cuidado capilar',  pvr:null, pvp:6.75, volume:250, url:'https://www.elcorteingles.es/', groupKey:'lpm-champu-arcilla' },
+  { name:'Champú Arcilla Blanca 250ml',        brand:'Le Petit Marseillais', retailer:'Amazon ES',       category:'Cuidado capilar',  pvr:null, pvp:5.99, volume:250, url:'https://www.amazon.es/', groupKey:'lpm-champu-arcilla' },
+
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Primor',          category:'Manos',            pvr:null, pvp:2.95, volume:75,  url:'https://www.primor.eu/es_es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Druni',           category:'Manos',            pvr:null, pvp:2.75, volume:75,  url:'https://www.druni.es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Marvimundo',      category:'Manos',            pvr:null, pvp:2.85, volume:75,  url:'https://www.marvimundo.com/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Carrefour',       category:'Manos',            pvr:null, pvp:2.99, volume:75,  url:'https://www.carrefour.es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Mercadona',       category:'Manos',            pvr:null, pvp:2.95, volume:75,  url:'https://www.mercadona.es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'DIA',             category:'Manos',            pvr:null, pvp:2.69, volume:75,  url:'https://www.dia.es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Amazon ES',       category:'Manos',            pvr:null, pvp:3.09, volume:75,  url:'https://www.amazon.es/', groupKey:'lpm-crema-manos-karite' },
+
+  /* ═══ OGX ═══ */
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Primor',          category:'Cuidado capilar', pvr:12.95, pvp:9.95,  volume:385, url:'https://www.primor.eu/es_es/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Druni',           category:'Cuidado capilar', pvr:12.95, pvp:8.99,  volume:385, url:'https://www.druni.es/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Marvimundo',      category:'Cuidado capilar', pvr:12.95, pvp:9.49,  volume:385, url:'https://www.marvimundo.com/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Alcampo',         category:'Cuidado capilar', pvr:12.95, pvp:9.79,  volume:385, url:'https://www.alcampo.es/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'El Corte Inglés', category:'Cuidado capilar', pvr:null,  pvp:11.25, volume:385, url:'https://www.elcorteingles.es/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Amazon ES',       category:'Cuidado capilar', pvr:null,  pvp:9.49,  volume:385, url:'https://www.amazon.es/', groupKey:'ogx-champu-argan-385' },
+  { name:'Champú Argan Oil of Morocco 385ml',  brand:'OGX', retailer:'Eroski',          category:'Cuidado capilar', pvr:null,  pvp:10.49, volume:385, url:'https://supermercado.eroski.es/', groupKey:'ogx-champu-argan-385' },
+
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Primor',          category:'Cuidado capilar', pvr:12.95, pvp:9.95,  volume:385, url:'https://www.primor.eu/es_es/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Druni',           category:'Cuidado capilar', pvr:12.95, pvp:8.99,  volume:385, url:'https://www.druni.es/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Marvimundo',      category:'Cuidado capilar', pvr:12.95, pvp:9.49,  volume:385, url:'https://www.marvimundo.com/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'El Corte Inglés', category:'Cuidado capilar', pvr:null,  pvp:11.25, volume:385, url:'https://www.elcorteingles.es/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Amazon ES',       category:'Cuidado capilar', pvr:null,  pvp:9.49,  volume:385, url:'https://www.amazon.es/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Eroski',          category:'Cuidado capilar', pvr:null,  pvp:10.49, volume:385, url:'https://supermercado.eroski.es/', groupKey:'ogx-champu-biotin-385' },
+
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Primor',          category:'Cuidado capilar', pvr:12.95, pvp:9.95,  volume:385, url:'https://www.primor.eu/es_es/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Druni',           category:'Cuidado capilar', pvr:12.95, pvp:8.99,  volume:385, url:'https://www.druni.es/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Marvimundo',      category:'Cuidado capilar', pvr:12.95, pvp:9.49,  volume:385, url:'https://www.marvimundo.com/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'El Corte Inglés', category:'Cuidado capilar', pvr:null,  pvp:11.25, volume:385, url:'https://www.elcorteingles.es/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Amazon ES',       category:'Cuidado capilar', pvr:null,  pvp:9.99,  volume:385, url:'https://www.amazon.es/', groupKey:'ogx-champu-coconut-385' },
+
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Primor',          category:'Cuidado capilar', pvr:12.95, pvp:9.95,  volume:385, url:'https://www.primor.eu/es_es/', groupKey:'ogx-cond-argan-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Druni',           category:'Cuidado capilar', pvr:12.95, pvp:8.99,  volume:385, url:'https://www.druni.es/', groupKey:'ogx-cond-argan-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Marvimundo',      category:'Cuidado capilar', pvr:12.95, pvp:9.49,  volume:385, url:'https://www.marvimundo.com/', groupKey:'ogx-cond-argan-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'El Corte Inglés', category:'Cuidado capilar', pvr:null,  pvp:11.25, volume:385, url:'https://www.elcorteingles.es/', groupKey:'ogx-cond-argan-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Amazon ES',       category:'Cuidado capilar', pvr:null,  pvp:9.49,  volume:385, url:'https://www.amazon.es/', groupKey:'ogx-cond-argan-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Eroski',          category:'Cuidado capilar', pvr:null,  pvp:10.49, volume:385, url:'https://supermercado.eroski.es/', groupKey:'ogx-cond-argan-385' },
+
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Primor',          category:'Cuidado capilar', pvr:12.95, pvp:9.95,  volume:385, url:'https://www.primor.eu/es_es/', groupKey:'ogx-champu-keratin-385' },
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Druni',           category:'Cuidado capilar', pvr:12.95, pvp:8.99,  volume:385, url:'https://www.druni.es/', groupKey:'ogx-champu-keratin-385' },
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Marvimundo',      category:'Cuidado capilar', pvr:12.95, pvp:9.49,  volume:385, url:'https://www.marvimundo.com/', groupKey:'ogx-champu-keratin-385' },
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Amazon ES',       category:'Cuidado capilar', pvr:null,  pvp:9.49,  volume:385, url:'https://www.amazon.es/', groupKey:'ogx-champu-keratin-385' },
+
+  /* ═══ CAREFREE ═══ */
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Primor',          category:'Higiene femenina', pvr:3.99, pvp:2.99, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:2.75, volume:null, url:'https://www.druni.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Marvimundo',      category:'Higiene femenina', pvr:3.99, pvp:2.85, volume:null, url:'https://www.marvimundo.com/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:2.89, volume:null, url:'https://www.carrefour.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'El Corte Inglés', category:'Higiene femenina', pvr:null, pvp:3.25, volume:null, url:'https://www.elcorteingles.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:1.99, volume:null, url:'https://www.dia.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:2.95, volume:null, url:'https://www.amazon.es/', groupKey:'cf-cotton-x30' },
+
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Primor',          category:'Higiene femenina', pvr:3.49, pvp:2.49, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:2.25, volume:null, url:'https://www.druni.es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Marvimundo',      category:'Higiene femenina', pvr:3.49, pvp:2.35, volume:null, url:'https://www.marvimundo.com/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:2.29, volume:null, url:'https://www.carrefour.es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:1.79, volume:null, url:'https://www.dia.es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:2.45, volume:null, url:'https://www.amazon.es/', groupKey:'cf-flexicomfort-x20' },
+
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Primor',          category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:3.75, volume:null, url:'https://www.druni.es/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Marvimundo',      category:'Higiene femenina', pvr:null, pvp:3.85, volume:null, url:'https://www.marvimundo.com/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.carrefour.es/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:3.29, volume:null, url:'https://www.dia.es/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.amazon.es/', groupKey:'cf-ultrafine-x58' },
+
+  /* ═══ O.B. ═══ */
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Primor',          category:'Higiene femenina', pvr:4.99, pvp:3.95, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:3.75, volume:null, url:'https://www.druni.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Marvimundo',      category:'Higiene femenina', pvr:4.99, pvp:3.85, volume:null, url:'https://www.marvimundo.com/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.carrefour.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'El Corte Inglés', category:'Higiene femenina', pvr:null, pvp:4.35, volume:null, url:'https://www.elcorteingles.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:3.55, volume:null, url:'https://www.dia.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.amazon.es/', groupKey:'ob-digital-normal' },
+
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Primor',          category:'Higiene femenina', pvr:4.99, pvp:3.95, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:3.75, volume:null, url:'https://www.druni.es/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Marvimundo',      category:'Higiene femenina', pvr:4.99, pvp:3.85, volume:null, url:'https://www.marvimundo.com/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.carrefour.es/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:3.55, volume:null, url:'https://www.dia.es/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.amazon.es/', groupKey:'ob-digital-super' },
+
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Primor',          category:'Higiene femenina', pvr:5.49, pvp:4.49, volume:null, url:'https://www.primor.eu/es_es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Druni',           category:'Higiene femenina', pvr:null, pvp:4.25, volume:null, url:'https://www.druni.es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Marvimundo',      category:'Higiene femenina', pvr:5.49, pvp:4.35, volume:null, url:'https://www.marvimundo.com/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Carrefour',       category:'Higiene femenina', pvr:null, pvp:4.45, volume:null, url:'https://www.carrefour.es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'El Corte Inglés', category:'Higiene femenina', pvr:null, pvp:4.89, volume:null, url:'https://www.elcorteingles.es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'DIA',             category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://www.dia.es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Amazon ES',       category:'Higiene femenina', pvr:null, pvp:4.49, volume:null, url:'https://www.amazon.es/', groupKey:'ob-procomfort-normal' },
+
+  /* ═══ ALCAMPO & EROSKI — Johnson's ═══ */
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Alcampo',  category:'Bebé', pvr:null, pvp:3.89, volume:300, url:'https://www.alcampo.es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 300ml",          brand:"Johnson's", retailer:'Eroski',   category:'Bebé', pvr:null, pvp:4.15, volume:300, url:'https://supermercado.eroski.es/', groupKey:'jb-champu-clasico-300' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Alcampo',  category:'Bebé', pvr:null, pvp:6.89, volume:750, url:'https://www.alcampo.es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Champú Clásico Gold 750ml",          brand:"Johnson's", retailer:'Eroski',   category:'Bebé', pvr:null, pvp:7.15, volume:750, url:'https://supermercado.eroski.es/', groupKey:'jb-champu-clasico-750' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Alcampo',  category:'Bebé', pvr:null, pvp:5.39, volume:500, url:'https://www.alcampo.es/', groupKey:'jb-gel-bano-500' },
+  { name:"Gel de Baño Dulces Sueños 500ml",    brand:"Johnson's", retailer:'Eroski',   category:'Bebé', pvr:null, pvp:5.59, volume:500, url:'https://supermercado.eroski.es/', groupKey:'jb-gel-bano-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Alcampo',  category:'Bebé', pvr:null, pvp:6.19, volume:500, url:'https://www.alcampo.es/', groupKey:'jb-locion-500' },
+  { name:"Loción Hidratante Bebé 500ml",       brand:"Johnson's", retailer:'Eroski',   category:'Bebé', pvr:null, pvp:6.45, volume:500, url:'https://supermercado.eroski.es/', groupKey:'jb-locion-500' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Alcampo',  category:'Bebé', pvr:null, pvp:4.39, volume:300, url:'https://www.alcampo.es/', groupKey:'jb-champu-camomila' },
+  { name:"Champú Camomila 300ml",              brand:"Johnson's", retailer:'Eroski',   category:'Bebé', pvr:null, pvp:4.59, volume:300, url:'https://supermercado.eroski.es/', groupKey:'jb-champu-camomila' },
+
+  /* ═══ ALCAMPO & EROSKI — Le Petit Marseillais ═══ */
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Alcampo', category:'Cuidado corporal', pvr:null, pvp:3.89, volume:400, url:'https://www.alcampo.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Melocotón 400ml',          brand:'Le Petit Marseillais', retailer:'Eroski',  category:'Cuidado corporal', pvr:null, pvp:3.99, volume:400, url:'https://supermercado.eroski.es/', groupKey:'lpm-gel-melocoton-400' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Alcampo', category:'Cuidado corporal', pvr:null, pvp:4.49, volume:650, url:'https://www.alcampo.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Flor de Azahar 650ml',     brand:'Le Petit Marseillais', retailer:'Eroski',  category:'Cuidado corporal', pvr:null, pvp:4.59, volume:650, url:'https://supermercado.eroski.es/', groupKey:'lpm-gel-azahar-650' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Alcampo', category:'Cuidado corporal', pvr:null, pvp:3.89, volume:400, url:'https://www.alcampo.es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Gel Ducha Almendras Dulces 400ml',   brand:'Le Petit Marseillais', retailer:'Eroski',  category:'Cuidado corporal', pvr:null, pvp:3.99, volume:400, url:'https://supermercado.eroski.es/', groupKey:'lpm-gel-almendra-400' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Alcampo', category:'Cuidado corporal', pvr:null, pvp:5.75, volume:400, url:'https://www.alcampo.es/', groupKey:'lpm-locion-karite' },
+  { name:'Loción Hidratante Karité 400ml',     brand:'Le Petit Marseillais', retailer:'Eroski',  category:'Cuidado corporal', pvr:null, pvp:5.89, volume:400, url:'https://supermercado.eroski.es/', groupKey:'lpm-locion-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Alcampo', category:'Manos', pvr:null, pvp:2.89, volume:75, url:'https://www.alcampo.es/', groupKey:'lpm-crema-manos-karite' },
+  { name:'Crema de Manos Karité 75ml',         brand:'Le Petit Marseillais', retailer:'Eroski',  category:'Manos', pvr:null, pvp:2.99, volume:75, url:'https://supermercado.eroski.es/', groupKey:'lpm-crema-manos-karite' },
+
+  /* ═══ ALCAMPO & EROSKI — OGX ═══ */
+  { name:'Champú Biotin & Collagen 385ml',     brand:'OGX', retailer:'Alcampo',  category:'Cuidado capilar', pvr:12.95, pvp:10.29, volume:385, url:'https://www.alcampo.es/', groupKey:'ogx-champu-biotin-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Alcampo',  category:'Cuidado capilar', pvr:12.95, pvp:10.29, volume:385, url:'https://www.alcampo.es/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Champú Coconut Milk 385ml',          brand:'OGX', retailer:'Eroski',   category:'Cuidado capilar', pvr:null,  pvp:10.99, volume:385, url:'https://supermercado.eroski.es/', groupKey:'ogx-champu-coconut-385' },
+  { name:'Acondicionador Argan Oil 385ml',     brand:'OGX', retailer:'Alcampo',  category:'Cuidado capilar', pvr:12.95, pvp:10.29, volume:385, url:'https://www.alcampo.es/', groupKey:'ogx-cond-argan-385' },
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Alcampo',  category:'Cuidado capilar', pvr:12.95, pvp:10.29, volume:385, url:'https://www.alcampo.es/', groupKey:'ogx-champu-keratin-385' },
+  { name:'Champú Keratin Oil 385ml',           brand:'OGX', retailer:'Eroski',   category:'Cuidado capilar', pvr:null,  pvp:10.99, volume:385, url:'https://supermercado.eroski.es/', groupKey:'ogx-champu-keratin-385' },
+
+  /* ═══ ALCAMPO & EROSKI — Carefree ═══ */
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:2.79, volume:null, url:'https://www.alcampo.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip Cotton Feel x30',         brand:'Carefree', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:2.99, volume:null, url:'https://supermercado.eroski.es/', groupKey:'cf-cotton-x30' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:2.19, volume:null, url:'https://www.alcampo.es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip FlexiComfort x20',        brand:'Carefree', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:2.35, volume:null, url:'https://supermercado.eroski.es/', groupKey:'cf-flexicomfort-x20' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:3.85, volume:null, url:'https://www.alcampo.es/', groupKey:'cf-ultrafine-x58' },
+  { name:'Protegeslip Ultrafine x58',           brand:'Carefree', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:3.99, volume:null, url:'https://supermercado.eroski.es/', groupKey:'cf-ultrafine-x58' },
+
+  /* ═══ ALCAMPO & EROSKI — o.b. ═══ */
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:3.89, volume:null, url:'https://www.alcampo.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Normal x16',         brand:'o.b.', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:4.09, volume:null, url:'https://supermercado.eroski.es/', groupKey:'ob-digital-normal' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:3.89, volume:null, url:'https://www.alcampo.es/', groupKey:'ob-digital-super' },
+  { name:'Tampones Digital Super x16',          brand:'o.b.', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:4.09, volume:null, url:'https://supermercado.eroski.es/', groupKey:'ob-digital-super' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Alcampo', category:'Higiene femenina', pvr:null, pvp:4.39, volume:null, url:'https://www.alcampo.es/', groupKey:'ob-procomfort-normal' },
+  { name:'Tampones ProComfort Normal x16',      brand:'o.b.', retailer:'Eroski',  category:'Higiene femenina', pvr:null, pvp:4.59, volume:null, url:'https://supermercado.eroski.es/', groupKey:'ob-procomfort-normal' },
+];
+
+function fmt(p){ return p==null?'—':p.toFixed(2).replace('.',',')+' €'; }
+function calcDiscount(pvr,pvp){ if(!pvr||pvr<=pvp)return null; return Math.round((1-pvp/pvr)*100); }
+function calcPer100(pvp,vol){ if(!vol||vol===0)return null; return (pvp/vol*100).toFixed(2); }
+
+function renderBrandPill(name){
+  const s=BRAND_STYLES[name]||{color:'#888',bg:'#eee'};
+  return `<span class="brand-pill" style="background:${s.bg};color:${s.color};"><span class="brand-dot" style="background:${s.color};"></span>${name}</span>`;
+}
+function renderRetailerPill(name){
+  const r=RETAILERS[name]||{color:'#888',bg:'#eee'};
+  return `<span class="retailer-pill" style="background:${r.bg};color:${r.color};"><span class="retailer-dot" style="background:${r.color};"></span>${name}</span>`;
+}
+function renderCategoryBadge(cat){
+  const map={'Cuidado capilar':'badge-capilar','Cuidado corporal':'badge-corporal','Bebé':'badge-bebe','Higiene femenina':'badge-femenina','Cuidado facial':'badge-facial','Manos':'badge-manos'};
+  return `<span class="badge ${map[cat]||'badge-corporal'}">${cat}</span>`;
+}
+
+const BRAND_ORDER = ["Johnson's", 'Le Petit Marseillais', 'OGX', 'Carefree', 'o.b.'];
+
+let state={ search:'', brand:'all', category:'all', retailer:'all', discount:false, priceMin:null, priceMax:null, sortCol:'brand', sortDir:'asc' };
+let cState={ search:'', brand:'all' };
+
+function getFiltered(){
+  let list=[...PRODUCTS];
+  if(state.search){ const n=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); const q=n(state.search); list=list.filter(p=>n(p.name).includes(q)||n(p.brand).includes(q)); }
+  if(state.brand!=='all') list=list.filter(p=>p.brand===state.brand);
+  if(state.category!=='all') list=list.filter(p=>p.category===state.category);
+  if(state.retailer!=='all') list=list.filter(p=>p.retailer===state.retailer);
+  if(state.discount) list=list.filter(p=>p.pvr&&p.pvp<p.pvr);
+  if(state.priceMin!==null) list=list.filter(p=>p.pvp>=state.priceMin);
+  if(state.priceMax!==null) list=list.filter(p=>p.pvp<=state.priceMax);
+  list.sort((a,b)=>{
+    // Primary sort: always by brand (canonical order)
+    const brandDiff = BRAND_ORDER.indexOf(a.brand) - BRAND_ORDER.indexOf(b.brand);
+    if(state.sortCol==='brand') return brandDiff * state.sortDir;
+    if(brandDiff!==0) return brandDiff; // keep brand grouping even on secondary sorts
+    // Secondary sort: chosen column
+    let av,bv;
+    switch(state.sortCol){
+      case 'name': av=a.name.toLowerCase();bv=b.name.toLowerCase();break;
+      case 'pvp': av=a.pvp;bv=b.pvp;break;
+      case 'pvr': av=a.pvr||9999;bv=b.pvr||9999;break;
+      case 'discount': av=calcDiscount(a.pvr,a.pvp)||0;bv=calcDiscount(b.pvr,b.pvp)||0;break;
+      case 'per100': av=parseFloat(calcPer100(a.pvp,a.volume))||9999;bv=parseFloat(calcPer100(b.pvp,b.volume))||9999;break;
+      default: av=a.pvp;bv=b.pvp;
+    }
+    if(av<bv)return state.sortDir==='asc'?-1:1;
+    if(av>bv)return state.sortDir==='asc'?1:-1;
+    return 0;
+  });
+  return list;
+}
+
+function renderList(){
+  const list=getFiltered();
+  const tbody=document.getElementById('tableBody');
+  const empty=document.getElementById('emptyState');
+  if(list.length===0){ tbody.innerHTML=''; empty.style.display='block'; }
+  else {
+    empty.style.display='none';
+    const showBrandHeaders = state.brand==='all' && state.sortCol==='brand';
+    let rows=[];
+    let lastBrand='';
+    list.forEach(p=>{
+      if(showBrandHeaders && p.brand!==lastBrand){
+        const s=BRAND_STYLES[p.brand]||{color:'#888',bg:'#eee'};
+        const count=list.filter(x=>x.brand===p.brand).length;
+        rows.push(`<tr class="brand-group-header">
+          <td colspan="10" style="padding:8px 16px;background:${s.bg};border-bottom:2px solid ${s.color}20;">
+            <span style="display:inline-flex;align-items:center;gap:8px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;"></span>
+              <span style="font-weight:700;font-size:var(--text-sm);color:${s.color};">${p.brand}</span>
+              <span style="font-size:var(--text-xs);color:var(--color-text-faint);">${count} entrada${count!==1?'s':''}</span>
+            </span>
+          </td>
+        </tr>`);
+        lastBrand=p.brand;
+      }
+      const disc=calcDiscount(p.pvr,p.pvp);
+      const per100=calcPer100(p.pvp,p.volume);
+      const hasDis=disc!==null;
+      rows.push(`<tr>
+        <td class="product-name">${p.name}</td>
+        <td>${renderBrandPill(p.brand)}</td>
+        <td>${renderRetailerPill(p.retailer)}</td>
+        <td>${renderCategoryBadge(p.category)}</td>
+        <td><div class="price-pvp ${hasDis?'has-discount':''}">${fmt(p.pvp)}${hasDis?`<span class="discount-badge">-${disc}%</span>`:''}</div></td>
+        <td><div class="price-pvr">${p.pvr?fmt(p.pvr):'—'}</div></td>
+        <td><div class="volume-cell">${p.volume?p.volume+' ml':'—'}</div></td>
+        <td>${hasDis?`<span style="font-weight:700;color:var(--color-danger);font-size:var(--text-sm);">${disc}%</span>`:`<span style="color:var(--color-text-faint);font-size:var(--text-xs);">—</span>`}</td>
+        <td class="price-per100">${per100?per100.replace('.',',')+' €/100ml':'—'}</td>
+        <td><a class="link-btn" href="${p.url}" target="_blank" rel="noopener">Ver<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+      </tr>`);
+    });
+    tbody.innerHTML=rows.join('');
+  }
+  document.getElementById('visibleCount').textContent=list.length;
+  document.getElementById('totalCount').textContent=PRODUCTS.length;
+  updateStats();
+}
+
+function updateStats(){
+  const real=PRODUCTS;
+  const prices=real.map(p=>p.pvp);
+  const avg=prices.reduce((a,b)=>a+b,0)/prices.length;
+  const min=Math.min(...prices);
+  const discounted=real.filter(p=>p.pvr&&p.pvp<p.pvr).length;
+  document.getElementById('totalProducts').textContent=real.length;
+  document.getElementById('avgPrice').textContent=avg.toFixed(2).replace('.',',')+' €';
+  document.getElementById('minPrice').textContent=min.toFixed(2).replace('.',',')+' €';
+  document.getElementById('discountedCount').textContent=discounted;
+  const groups=buildGroups('all','');
+  document.getElementById('compareGroupsCount').textContent=groups.length;
+}
+
+function buildGroups(brandFilter, searchFilter){
+  const grouped={};
+  PRODUCTS.forEach(p=>{
+    if(!p.groupKey)return;
+    if(brandFilter!=='all'&&p.brand!==brandFilter)return;
+    if(searchFilter){
+      const n=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const q=n(searchFilter);
+      const label=n(GROUP_LABELS[p.groupKey]||p.groupKey);
+      if(!label.includes(q)&&!n(p.name).includes(q))return;
+    }
+    if(!grouped[p.groupKey])grouped[p.groupKey]={label:GROUP_LABELS[p.groupKey]||p.groupKey,brand:p.brand,category:p.category,byRetailer:{}};
+    const ex=grouped[p.groupKey].byRetailer[p.retailer];
+    if(!ex||p.pvp<ex.pvp)grouped[p.groupKey].byRetailer[p.retailer]=p;
+  });
+  return Object.values(grouped).filter(g=>Object.keys(g.byRetailer).length>=2).sort((a,b)=>{
+    const aMin=Math.min(...Object.values(a.byRetailer).map(p=>p.pvp));
+    const bMin=Math.min(...Object.values(b.byRetailer).map(p=>p.pvp));
+    return aMin-bMin;
+  });
+}
+
+function renderCompare(){
+  const groups=buildGroups(cState.brand,cState.search);
+  const noG=document.getElementById('noGroups');
+  const thead=document.getElementById('crossHead');
+  const tbody=document.getElementById('crossBody');
+  if(groups.length===0){thead.innerHTML='';tbody.innerHTML='';noG.style.display='block';return;}
+  noG.style.display='none';
+  const activeRetailers=ALL_RETAILERS.filter(r=>groups.some(g=>g.byRetailer[r]));
+  thead.innerHTML=`<tr>
+    <th class="col-product">Producto</th>
+    <th class="col-brand">Marca</th>
+    <th class="col-cat">Cat.</th>
+    ${activeRetailers.map(r=>{
+      const rc=RETAILERS[r]||{color:'#888'};
+      const count=groups.filter(g=>g.byRetailer[r]).length;
+      return `<th class="retailer-th">
+        <div class="retailer-th-inner">
+          <span class="retailer-th-dot" style="background:${rc.color};"></span>
+          <span class="retailer-th-name" style="color:${rc.color};">${r}</span>
+          <span class="retailer-th-count">${count} prod.</span>
+        </div>
+      </th>`;
+    }).join('')}
+    <th class="col-best">Más barato</th>
+  </tr>`;
+  tbody.innerHTML=groups.map(g=>{
+    const allPrices=Object.values(g.byRetailer).map(p=>p.pvp);
+    const minP=Math.min(...allPrices);
+    const maxP=Math.max(...allPrices);
+    const bestRetailer=Object.entries(g.byRetailer).find(([r,p])=>p.pvp===minP);
+    const saving=maxP>minP?maxP-minP:0;
+    const savingPct=maxP>0?Math.round((saving/maxP)*100):0;
+    const cells=activeRetailers.map(r=>{
+      const p=g.byRetailer[r];
+      if(!p)return`<td class="price-cell"><span class="pc-na">—</span></td>`;
+      const rc=RETAILERS[r]||{color:'#888'};
+      const isBest=p.pvp===minP&&allPrices.filter(x=>x===minP).length<allPrices.length;
+      const isWorst=p.pvp===maxP&&allPrices.length>1;
+      const disc=calcDiscount(p.pvr,p.pvp);
+      return`<td class="price-cell" style="${isBest?'background:var(--color-success-hl);':''}">
+        <div class="pc-inner">
+          ${isBest?`<div class="pc-best-wrap"><span class="pc-best-tag">✓ mejor</span></div>`:''}
+          <div class="pc-pvp ${isBest?'pc-best':isWorst&&allPrices.length>1?'pc-worst':''}">${fmt(p.pvp)}</div>
+          ${disc?`<span class="pc-disc">-${disc}%</span>`:''}
+          ${p.pvr?`<span class="pc-pvr">${fmt(p.pvr)}</span>`:''}
+          <a class="pc-link" href="${p.url}" target="_blank" rel="noopener">Ver ↗</a>
+        </div>
+      </td>`;
+    }).join('');
+    const bestR=bestRetailer?bestRetailer[0]:'—';
+    const bestRC=RETAILERS[bestR]||{color:'#888'};
+    return`<tr>
+      <td class="col-product">${g.label}</td>
+      <td class="col-brand">${renderBrandPill(g.brand)}</td>
+      <td class="col-cat">${renderCategoryBadge(g.category)}</td>
+      ${cells}
+      <td class="best-cell">
+        <div class="pc-inner">
+          <div class="best-price-val">${fmt(minP)}</div>
+          <div class="best-retailer-name" style="color:${bestRC.color};font-weight:600;">${bestR}</div>
+          ${saving>0?`<span class="saving-tag">ahorra ${fmt(saving)} (${savingPct}%)</span>`:''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+document.querySelectorAll('th.sortable').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=th.dataset.col;
+    if(state.sortCol===col){state.sortDir=state.sortDir==='asc'?'desc':'asc';}
+    else{state.sortCol=col;state.sortDir='asc';}
+    document.querySelectorAll('th.sortable').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+    th.classList.add(state.sortDir==='asc'?'sort-asc':'sort-desc');
+    renderList();
+  });
+});
+
+document.querySelectorAll('[data-filter]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const filter=btn.dataset.filter; const value=btn.dataset.value;
+    if(filter==='discount'){state.discount=!state.discount;btn.classList.toggle('active',state.discount);}
+    else{state[filter]=value;document.querySelectorAll(`[data-filter="${filter}"]`).forEach(b=>b.classList.toggle('active',b.dataset.value===value));}
+    renderList();
+  });
+});
+document.getElementById('searchInput').addEventListener('input',e=>{state.search=e.target.value;renderList();});
+document.getElementById('priceMin').addEventListener('input',e=>{state.priceMin=e.target.value!==''?parseFloat(e.target.value):null;renderList();});
+document.getElementById('priceMax').addEventListener('input',e=>{state.priceMax=e.target.value!==''?parseFloat(e.target.value):null;renderList();});
+
+document.getElementById('compareSearch').addEventListener('input',e=>{cState.search=e.target.value;renderCompare();});
+document.querySelectorAll('[data-cbrand]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    cState.brand=btn.dataset.cbrand;
+    document.querySelectorAll('[data-cbrand]').forEach(b=>b.classList.toggle('active',b.dataset.cbrand===cState.brand));
+    renderCompare();
+  });
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const target=btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    if(target==='tab-compare')renderCompare();
+  });
+});
+
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  function upd(){t.innerHTML=d==='dark'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';}
+  upd();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upd();});
+})();
+
+renderList();
+loadLivePrices();
+</script>
+</body>
+</html>
