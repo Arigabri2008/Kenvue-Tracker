@@ -1,9 +1,9 @@
 {
-  "scraped_at": "2026-03-18T11:18:45.146913+00:00",
+  "scraped_at": "2026-03-23T09:19:12.841553+00:00",
   "summary": {
     "total": 60,
-    "ok": 1,
-    "failed": 59
+    "ok": 2,
+    "failed": 58
   },
   "records": [
     {
@@ -16,7 +16,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.primor.eu/es_es/johnsons-baby-champu-clasico-gold-300ml.html",
-      "scraped_at": "2026-03-18T11:16:06.681445+00:00",
+      "scraped_at": "2026-03-23T09:16:32.738677+00:00",
       "ok": false
     },
     {
@@ -29,7 +29,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.druni.es/johnsons-baby-champu-clasico-gold-300ml",
-      "scraped_at": "2026-03-18T11:16:06.683525+00:00",
+      "scraped_at": "2026-03-23T09:16:32.740247+00:00",
       "ok": false
     },
     {
@@ -42,7 +42,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.marvimundo.com/johnsons-baby-champu-clasico-gold-300ml",
-      "scraped_at": "2026-03-18T11:16:06.684937+00:00",
+      "scraped_at": "2026-03-23T09:16:32.741524+00:00",
       "ok": false
     },
     {
@@ -55,7 +55,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.alcampo.es/compra-online/higiene-y-belleza/higiene-bebe/champu-bebe/johnsons-baby-champu-clasico-300ml",
-      "scraped_at": "2026-03-18T11:16:14.625994+00:00",
+      "scraped_at": "2026-03-23T09:16:43.763685+00:00",
       "ok": false
     },
     {
@@ -68,7 +68,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.carrefour.es/supermercado/champu-clasico-para-pelo-suave-brillante-e-hidratado-johnsons-baby-300-ml/R-prod1120668/p",
-      "scraped_at": "2026-03-18T11:16:16.865814+00:00",
+      "scraped_at": "2026-03-23T09:16:44.277516+00:00",
       "ok": true
     },
     {
@@ -81,7 +81,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.elcorteingles.es/supermercado/A40266756-johnson-s-baby-champu-clasico-gold-300-ml/",
-      "scraped_at": "2026-03-18T11:16:18.027827+00:00",
+      "scraped_at": "2026-03-23T09:16:45.450875+00:00",
       "ok": false
     },
     {
@@ -94,7 +94,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://supermercado.eroski.es/es/alimentacion/johnsons-baby-champu-clasico-300ml/",
-      "scraped_at": "2026-03-18T11:16:19.592883+00:00",
+      "scraped_at": "2026-03-23T09:16:46.379221+00:00",
       "ok": false
     },
     {
@@ -107,7 +107,7 @@
       "pvr": null,
       "volume_ml": 300,
       "url": "https://www.amazon.es/dp/B07H9H5GLP",
-      "scraped_at": "2026-03-18T11:16:22.570202+00:00",
+      "scraped_at": "2026-03-23T09:16:49.649525+00:00",
       "ok": false
     },
     {
@@ -120,7 +120,7 @@
       "pvr": null,
       "volume_ml": 750,
       "url": "https://www.primor.eu/es_es/johnsons-baby-champu-clasico-gold-750ml.html",
-      "scraped_at": "2026-03-18T11:16:22.954212+00:00",
+      "scraped_at": "2026-03-23T09:16:49.840150+00:00",
       "ok": false
     },
     {
@@ -133,7 +133,7 @@
       "pvr": null,
       "volume_ml": 750,
       "url": "https://www.druni.es/johnsons-baby-champu-clasico-gold-750ml",
-      "scraped_at": "2026-03-18T11:16:25.956600+00:00",
+      "scraped_at": "2026-03-23T09:16:54.521381+00:00",
       "ok": false
     },
     {
@@ -142,12 +142,12 @@
       "brand": "Johnson's",
       "category": "Bebé",
       "retailer": "Carrefour",
-      "pvp": null,
+      "pvp": 4.65,
       "pvr": null,
       "volume_ml": 750,
       "url": "https://www.carrefour.es/supermercado/champu-clasico-para-pelo-suave-brillante-e-hidratado-johnsons-baby-750-ml/R-prod1120669/p",
-      "scraped_at": "2026-03-18T11:16:29.756146+00:00",
-      "ok": false
+      "scraped_at": "2026-03-23T09:16:57.529303+00:00",
+      "ok": true
     },
     {
       "group_key": "jb-champu-clasico-750",
@@ -159,7 +159,7 @@
       "pvr": null,
       "volume_ml": 750,
       "url": "https://www.amazon.es/dp/B07HBFNLPQ",
-      "scraped_at": "2026-03-18T11:16:30.476771+00:00",
+      "scraped_at": "2026-03-23T09:16:59.660458+00:00",
       "ok": false
     },
     {
@@ -172,7 +172,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.primor.eu/es_es/johnsons-baby-gel-de-bano-dulces-suenos-500ml.html",
-      "scraped_at": "2026-03-18T11:16:37.368934+00:00",
+      "scraped_at": "2026-03-23T09:17:00.544103+00:00",
       "ok": false
     },
     {
@@ -185,7 +185,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.carrefour.es/supermercado/gel-de-bano-dulces-suenos-johnsons-baby-500-ml/R-prod1068218/p",
-      "scraped_at": "2026-03-18T11:16:40.357103+00:00",
+      "scraped_at": "2026-03-23T09:17:06.265872+00:00",
       "ok": false
     },
     {
@@ -198,7 +198,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.amazon.es/dp/B07BF1TJC7",
-      "scraped_at": "2026-03-18T11:16:40.910739+00:00",
+      "scraped_at": "2026-03-23T09:17:07.251428+00:00",
       "ok": false
     },
     {
@@ -211,7 +211,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.primor.eu/es_es/johnsons-baby-locion-hidratante-500ml.html",
-      "scraped_at": "2026-03-18T11:16:45.699014+00:00",
+      "scraped_at": "2026-03-23T09:17:09.829073+00:00",
       "ok": false
     },
     {
@@ -224,7 +224,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.carrefour.es/supermercado/locion-hidratante-johnsons-baby-500-ml/R-prod1068220/p",
-      "scraped_at": "2026-03-18T11:16:45.971052+00:00",
+      "scraped_at": "2026-03-23T09:17:14.168107+00:00",
       "ok": false
     },
     {
@@ -237,7 +237,7 @@
       "pvr": null,
       "volume_ml": 500,
       "url": "https://www.amazon.es/dp/B00BYAENDK",
-      "scraped_at": "2026-03-18T11:16:50.296187+00:00",
+      "scraped_at": "2026-03-23T09:17:14.587125+00:00",
       "ok": false
     },
     {
@@ -250,7 +250,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.primor.eu/es_es/le-petit-marseillais-gel-de-ducha-melocoton-400ml.html",
-      "scraped_at": "2026-03-18T11:16:55.129304+00:00",
+      "scraped_at": "2026-03-23T09:17:20.001430+00:00",
       "ok": false
     },
     {
@@ -263,7 +263,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.druni.es/le-petit-marseillais-gel-ducha-melocoton-400ml",
-      "scraped_at": "2026-03-18T11:16:55.575361+00:00",
+      "scraped_at": "2026-03-23T09:17:20.930978+00:00",
       "ok": false
     },
     {
@@ -276,7 +276,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.alcampo.es/compra-online/higiene-y-belleza/gel-de-ducha/le-petit-marseillais-gel-ducha-melocoton-400ml",
-      "scraped_at": "2026-03-18T11:16:56.047662+00:00",
+      "scraped_at": "2026-03-23T09:17:25.492803+00:00",
       "ok": false
     },
     {
@@ -289,7 +289,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.carrefour.es/supermercado/gel-de-bano-melocoton-le-petit-marseillais-400-ml/R-prod440186/p",
-      "scraped_at": "2026-03-18T11:17:03.234769+00:00",
+      "scraped_at": "2026-03-23T09:17:27.041340+00:00",
       "ok": false
     },
     {
@@ -302,7 +302,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://tienda.mercadona.es/product/77236/le-petit-marseillais-gel-ducha-melocoton",
-      "scraped_at": "2026-03-18T11:17:03.796413+00:00",
+      "scraped_at": "2026-03-23T09:17:31.479322+00:00",
       "ok": false
     },
     {
@@ -315,7 +315,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.dia.es/compra/higiene-y-salud/higiene-corporal/geles-de-bano-y-ducha/gel-ducha-melocoton-le-petit-marseillais-400ml",
-      "scraped_at": "2026-03-18T11:17:04.789809+00:00",
+      "scraped_at": "2026-03-23T09:17:32.044932+00:00",
       "ok": false
     },
     {
@@ -328,7 +328,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.amazon.es/dp/B00R7CLMFW",
-      "scraped_at": "2026-03-18T11:17:10.944179+00:00",
+      "scraped_at": "2026-03-23T09:17:36.634469+00:00",
       "ok": false
     },
     {
@@ -341,7 +341,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://supermercado.eroski.es/es/alimentacion/le-petit-marseillais-gel-ducha-melocoton-400ml/",
-      "scraped_at": "2026-03-18T11:17:11.557223+00:00",
+      "scraped_at": "2026-03-23T09:17:39.006123+00:00",
       "ok": false
     },
     {
@@ -354,7 +354,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.carrefour.es/supermercado/crema-corporal-karite-le-petit-marseillais-400-ml/R-prod440187/p",
-      "scraped_at": "2026-03-18T11:17:13.515779+00:00",
+      "scraped_at": "2026-03-23T09:17:42.234746+00:00",
       "ok": false
     },
     {
@@ -367,7 +367,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://tienda.mercadona.es/product/77237/le-petit-marseillais-crema-corporal-karite",
-      "scraped_at": "2026-03-18T11:17:17.115857+00:00",
+      "scraped_at": "2026-03-23T09:17:44.582858+00:00",
       "ok": false
     },
     {
@@ -380,7 +380,7 @@
       "pvr": null,
       "volume_ml": 400,
       "url": "https://www.amazon.es/dp/B00S4JO2IC",
-      "scraped_at": "2026-03-18T11:17:19.988032+00:00",
+      "scraped_at": "2026-03-23T09:17:46.747242+00:00",
       "ok": false
     },
     {
@@ -393,7 +393,7 @@
       "pvr": null,
       "volume_ml": 75,
       "url": "https://www.carrefour.es/supermercado/crema-de-manos-karite-le-petit-marseillais-75-ml/R-prod440189/p",
-      "scraped_at": "2026-03-18T11:17:24.331736+00:00",
+      "scraped_at": "2026-03-23T09:17:50.276593+00:00",
       "ok": false
     },
     {
@@ -406,7 +406,7 @@
       "pvr": null,
       "volume_ml": 75,
       "url": "https://tienda.mercadona.es/product/77240/le-petit-marseillais-crema-manos-karite",
-      "scraped_at": "2026-03-18T11:17:25.633583+00:00",
+      "scraped_at": "2026-03-23T09:17:53.861696+00:00",
       "ok": false
     },
     {
@@ -419,7 +419,7 @@
       "pvr": null,
       "volume_ml": 75,
       "url": "https://www.dia.es/compra/higiene-y-salud/higiene-corporal/cremas-de-manos/crema-manos-karite-le-petit-marseillais-75ml",
-      "scraped_at": "2026-03-18T11:17:27.609398+00:00",
+      "scraped_at": "2026-03-23T09:17:53.952444+00:00",
       "ok": false
     },
     {
@@ -432,7 +432,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.primor.eu/es_es/ogx-champu-argan-oil-of-morocco-385ml.html",
-      "scraped_at": "2026-03-18T11:17:33.568730+00:00",
+      "scraped_at": "2026-03-23T09:17:57.769557+00:00",
       "ok": false
     },
     {
@@ -445,7 +445,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.druni.es/ogx-champu-argan-oil-of-morocco-385ml",
-      "scraped_at": "2026-03-18T11:17:34.114023+00:00",
+      "scraped_at": "2026-03-23T09:18:00.213566+00:00",
       "ok": false
     },
     {
@@ -458,7 +458,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.marvimundo.com/ogx-champu-argan-oil-of-morocco-385ml",
-      "scraped_at": "2026-03-18T11:17:36.286460+00:00",
+      "scraped_at": "2026-03-23T09:18:03.364908+00:00",
       "ok": false
     },
     {
@@ -471,7 +471,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.alcampo.es/compra-online/higiene-y-belleza/champu/ogx-champu-argan-oil-morocco-385ml",
-      "scraped_at": "2026-03-18T11:17:42.435200+00:00",
+      "scraped_at": "2026-03-23T09:18:07.487495+00:00",
       "ok": false
     },
     {
@@ -484,7 +484,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.elcorteingles.es/supermercado/A40000001-ogx-champu-argan-oil-of-morocco-385ml/",
-      "scraped_at": "2026-03-18T11:17:43.527681+00:00",
+      "scraped_at": "2026-03-23T09:18:10.211727+00:00",
       "ok": false
     },
     {
@@ -497,7 +497,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.amazon.es/dp/B07C59VFGT",
-      "scraped_at": "2026-03-18T11:17:44.615411+00:00",
+      "scraped_at": "2026-03-23T09:18:11.106825+00:00",
       "ok": false
     },
     {
@@ -510,7 +510,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.primor.eu/es_es/ogx-champu-biotin-collagen-385ml.html",
-      "scraped_at": "2026-03-18T11:17:48.010969+00:00",
+      "scraped_at": "2026-03-23T09:18:14.953674+00:00",
       "ok": false
     },
     {
@@ -523,7 +523,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.druni.es/ogx-champu-biotin-collagen-385ml",
-      "scraped_at": "2026-03-18T11:17:48.960883+00:00",
+      "scraped_at": "2026-03-23T09:18:15.516843+00:00",
       "ok": false
     },
     {
@@ -536,7 +536,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.amazon.es/dp/B07C5H4DKB",
-      "scraped_at": "2026-03-18T11:17:49.791775+00:00",
+      "scraped_at": "2026-03-23T09:18:16.898073+00:00",
       "ok": false
     },
     {
@@ -549,7 +549,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.primor.eu/es_es/ogx-acondicionador-argan-oil-of-morocco-385ml.html",
-      "scraped_at": "2026-03-18T11:17:55.498061+00:00",
+      "scraped_at": "2026-03-23T09:18:24.215109+00:00",
       "ok": false
     },
     {
@@ -562,7 +562,7 @@
       "pvr": null,
       "volume_ml": 385,
       "url": "https://www.amazon.es/dp/B07C5HFNX8",
-      "scraped_at": "2026-03-18T11:17:57.146997+00:00",
+      "scraped_at": "2026-03-23T09:18:24.312428+00:00",
       "ok": false
     },
     {
@@ -575,7 +575,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.primor.eu/es_es/carefree-cotton-feel-protegeslip-30u.html",
-      "scraped_at": "2026-03-18T11:17:57.819262+00:00",
+      "scraped_at": "2026-03-23T09:18:27.786470+00:00",
       "ok": false
     },
     {
@@ -588,7 +588,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.carrefour.es/supermercado/protege-slips-carefree-cotton-feel-30-ud/R-prod355174/p",
-      "scraped_at": "2026-03-18T11:18:02.665424+00:00",
+      "scraped_at": "2026-03-23T09:18:31.210093+00:00",
       "ok": false
     },
     {
@@ -601,7 +601,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.alcampo.es/compra-online/higiene-y-belleza/higiene-femenina/protegeslips/carefree-cotton-feel-30ud",
-      "scraped_at": "2026-03-18T11:18:05.248195+00:00",
+      "scraped_at": "2026-03-23T09:18:32.001084+00:00",
       "ok": false
     },
     {
@@ -614,7 +614,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.dia.es/compra/higiene-y-salud/higiene-femenina/protegeslips/carefree-cotton-feel-30ud",
-      "scraped_at": "2026-03-18T11:18:06.553368+00:00",
+      "scraped_at": "2026-03-23T09:18:36.286877+00:00",
       "ok": false
     },
     {
@@ -627,7 +627,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.amazon.es/dp/B00E6LDPZ8",
-      "scraped_at": "2026-03-18T11:18:11.211015+00:00",
+      "scraped_at": "2026-03-23T09:18:36.880472+00:00",
       "ok": false
     },
     {
@@ -640,7 +640,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.primor.eu/es_es/carefree-protegeslip-ultrafine-58u.html",
-      "scraped_at": "2026-03-18T11:18:11.716928+00:00",
+      "scraped_at": "2026-03-23T09:18:39.241409+00:00",
       "ok": false
     },
     {
@@ -653,7 +653,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.carrefour.es/supermercado/protege-slips-carefree-ultrafine-58-ud/R-prod355175/p",
-      "scraped_at": "2026-03-18T11:18:12.281385+00:00",
+      "scraped_at": "2026-03-23T09:18:41.823805+00:00",
       "ok": false
     },
     {
@@ -666,7 +666,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.dia.es/compra/higiene-y-salud/higiene-femenina/protegeslips/carefree-ultrafine-58ud",
-      "scraped_at": "2026-03-18T11:18:16.890610+00:00",
+      "scraped_at": "2026-03-23T09:18:43.643376+00:00",
       "ok": false
     },
     {
@@ -679,7 +679,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.amazon.es/dp/B07K3P7GVQ",
-      "scraped_at": "2026-03-18T11:18:18.755176+00:00",
+      "scraped_at": "2026-03-23T09:18:46.830867+00:00",
       "ok": false
     },
     {
@@ -692,7 +692,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.primor.eu/es_es/ob-tampones-digital-normal-16u.html",
-      "scraped_at": "2026-03-18T11:18:20.402013+00:00",
+      "scraped_at": "2026-03-23T09:18:48.862914+00:00",
       "ok": false
     },
     {
@@ -705,7 +705,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.carrefour.es/supermercado/tampones-digital-ob-normal-16-ud/R-prod355180/p",
-      "scraped_at": "2026-03-18T11:18:22.515993+00:00",
+      "scraped_at": "2026-03-23T09:18:48.990465+00:00",
       "ok": false
     },
     {
@@ -718,7 +718,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.alcampo.es/compra-online/higiene-y-belleza/higiene-femenina/tampones/ob-tampones-digital-normal-16ud",
-      "scraped_at": "2026-03-18T11:18:24.132242+00:00",
+      "scraped_at": "2026-03-23T09:18:54.426684+00:00",
       "ok": false
     },
     {
@@ -731,7 +731,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.dia.es/compra/higiene-y-salud/higiene-femenina/tampones/ob-digital-normal-16ud",
-      "scraped_at": "2026-03-18T11:18:28.272714+00:00",
+      "scraped_at": "2026-03-23T09:18:55.378956+00:00",
       "ok": false
     },
     {
@@ -744,7 +744,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.amazon.es/dp/B008UIMNM8",
-      "scraped_at": "2026-03-18T11:18:31.589667+00:00",
+      "scraped_at": "2026-03-23T09:18:57.230277+00:00",
       "ok": false
     },
     {
@@ -757,7 +757,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.primor.eu/es_es/ob-tampones-procomfort-normal-16u.html",
-      "scraped_at": "2026-03-18T11:18:31.982764+00:00",
+      "scraped_at": "2026-03-23T09:19:02.561220+00:00",
       "ok": false
     },
     {
@@ -770,7 +770,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.carrefour.es/supermercado/tampones-procomfort-ob-normal-16-ud/R-prod355181/p",
-      "scraped_at": "2026-03-18T11:18:33.736448+00:00",
+      "scraped_at": "2026-03-23T09:19:02.716896+00:00",
       "ok": false
     },
     {
@@ -783,7 +783,7 @@
       "pvr": null,
       "volume_ml": null,
       "url": "https://www.amazon.es/dp/B008UIN3YC",
-      "scraped_at": "2026-03-18T11:18:37.767923+00:00",
+      "scraped_at": "2026-03-23T09:19:03.478145+00:00",
       "ok": false
     }
   ]
